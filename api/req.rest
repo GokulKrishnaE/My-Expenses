@@ -1,0 +1,11 @@
+GET http://localhost:8800/api/trips
+###
+POST https://localhost:8800/api/trips/
+Content-Type: application/json
+{
+    "tripName": "new Trip2",
+    "tripDestination": "new destination2",
+    "cost": 5000
+}
+
+###
