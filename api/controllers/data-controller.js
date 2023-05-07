@@ -32,7 +32,7 @@ export const addExpense = async (req,res) =>{
 export const deleteExpense = async (req,res) =>{
     const id = req.params.id
     try{
-        const data = await pool.query(`DELETE FROM EXPENSES WHERE id = ${id}`)
+        const data = await pool.query(`DELETE FROM EXPENSES WHERE id = '${id}'`)
         res.json({data:data.rows,status:true, details:'deleted'})
     }
     catch(err){

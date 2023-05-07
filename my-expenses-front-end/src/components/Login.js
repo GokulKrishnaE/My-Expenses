@@ -24,6 +24,7 @@ function Login(){
         console.log(res.data)
         if(res.data.token){
             document.querySelector('.errorMsg').classList.remove('active')
+            localStorage.setItem('data',res.data.user)
             localStorage.setItem('token',res.data.token)
             localStorage.setItem('isLogin',true)
             localStorage.setItem('userEmail',res.data.user[0].email)

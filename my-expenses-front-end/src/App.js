@@ -17,8 +17,8 @@ function App() {
         <h1 className="logo logoHeading">My Expenses</h1>
         <ul className="mainMenu list-unstyled">
             <li className="active"><Link to="/home"><i className="fas fa-home"></i> Home</Link></li>
-            <li><a href="javascript:void(0)"><i className="fas fa-wallet"></i> Expense Breakdown</a></li>
-            <li><a href="javascript:void(0)"><i className="fas fa-gear"></i> Settings</a></li>
+            <li><a href="javascript:void(0)" className='disabled'><i className="fas fa-wallet"></i> Expense Breakdown</a></li>
+            <li><a href="javascript:void(0)" className='disabled'><i className="fas fa-gear"></i> Settings</a></li>
             <li><a onClick={logout} href="javascript:void(0)"><i className="fas fa-arrow-right-from-bracket"></i> Log out</a></li>
         </ul>
       </div>}
