@@ -14,7 +14,6 @@ const Register = () => {
         isAdmin: false
     })
     const handleRegister = (evt) =>{
-        console.log('enterd')
         // const value = evt.target.value;
         setNewUser({
             ...newUser,
@@ -28,12 +27,15 @@ const Register = () => {
             const url = 'http://localhost:8800/api/register'
             await axios.post(url,newUser)
             .then(res => {
-                console.log(res.data)
                 if(res.data.status){
+                    axios.post(`http://localhost:8800/api/categories/create/${newUser.email}`)
+                    .then(res => {
+                        console.log(res.data)
+                        localStorage.setItem('categoryadded',true)
+                    })
                     navigate('/')
                 }
                 else{
-                    console.log('error')
                     document.querySelector('.errorMsg').textContent = res.data.error
                     document.querySelector('.errorMsg').classList.add('active')
                 }

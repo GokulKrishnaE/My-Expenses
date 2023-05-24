@@ -7,12 +7,12 @@ import { useState } from 'react';
 function App() {
   const navigate = useNavigate()
   function logout(){
-    localStorage.clear()
+    sessionStorage.clear()
     navigate('/')
   }
   return (
     <>
-    { localStorage.getItem('isLogin') &&       
+    { sessionStorage.getItem('isLogin') &&       
       <div className="sideNav navigation">
         <h1 className="logo logoHeading">My Expenses</h1>
         <ul className="mainMenu list-unstyled">

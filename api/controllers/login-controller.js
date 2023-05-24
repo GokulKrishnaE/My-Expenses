@@ -9,7 +9,7 @@ export const login = async (req,res) =>{
         if(data.rowCount !=0){
             const user = data.rows
             const token = Jwt.sign({email: user.email, isAdmin: user.isAdmin},process.env.ACCESS_TOKEN_SECRET)
-            res.send({data: data,token: token, user: user})
+            res.send({token: token, user: user})
         }
         else{
             res.send({error: 'User not found'})

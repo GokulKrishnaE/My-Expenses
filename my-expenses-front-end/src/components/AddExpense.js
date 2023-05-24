@@ -2,8 +2,11 @@ import { useState } from "react"
 import axios from 'axios'
 import { Navigate, useNavigate } from "react-router-dom"
 
-function AddExpense({email}){
+function AddExpense({email,categories,reFresh}){
 
+  console.log('addexpense renderd')
+
+  const [newCategory,setNewCategory] = useState({category: ''})
   const [newExpense, setNewExpense] = useState({
     email: email,
     title: '',
@@ -12,29 +15,36 @@ function AddExpense({email}){
     amount: ''
   })
 
+
   function handleAdd(e){
     const value = e.target.value;
-    console.log(value)
     setNewExpense({
       ...newExpense,
       [e.target.name]: value
     })
   }
 
+  const addNewCategory = async () =>{
+    console.log(newCategory)
+    const url = `http://localhost:8800/api/categories/add/${email}`
+    await axios.post(url,newCategory)
+    .then(res => {
+        console.log(res)
+        reFresh()
+    })
+}
+
   const addExpense = async () =>{
-    console.log(newExpense)
     if(newExpense.title && newExpense.category && newExpense.date && newExpense.amount){
-      console.log('going in')
       document.querySelector('.errorMsg').classList.remove('active')
       const url = `http://localhost:8800/api/addExpense/${email}`
       await axios.post(url,newExpense)
       .then(res => {
           console.log(res.data)
-          window.location.reload()
+          reFresh()
       })
     }  
     else{
-      console.log('error')
       document.querySelector('.errorMsg').classList.add('active')
     }
   }
@@ -55,13 +65,22 @@ function AddExpense({email}){
                     <div className="form-group">
                         <div className="d-flex justify-content-between">
                             <label className="label">Category</label>
-                            <a href="javascript:void(0)"><i className="fas fa-plus"></i> Add a category</a>
+                            <a href="javascript:void(0)" data-bs-toggle="collapse" data-bs-target="#addCategoryForm"><i className="fas fa-plus"></i> Add a category</a>
+                        </div>
+                        <div className="form-group collapse" id="addCategoryForm">
+                          <div className="row">
+                            <div className="col-7">
+                              <input type="text" value={newCategory.category} onChange={(e)=>setNewCategory({category:e.target.value})} className="form-control"/>
+                            </div>
+                            <div className="col-5">
+                              <button className="btn btn-primary" onClick={addNewCategory}><i class="fas fa-plus"></i></button>
+                            </div>
+                          </div>
                         </div>
                         <select name="category" className="form-select" value={newExpense.category} onChange={handleAdd}>
-                            <option value="food">Food</option>
-                            <option value="travel">Travel</option>
-                            <option value="accomodation">Accomodation</option>
-                            <option value="other">Other</option>
+                          {categories.map(category=>{
+                            return <option>{category}</option>
+                          })}
                         </select>
                     </div>
                     <div className="form-group">

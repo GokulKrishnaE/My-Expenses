@@ -6,20 +6,17 @@ import AddExpense from "./AddExpense";
 
 function Home(){
 
-    const token = localStorage.getItem('token')
-    const data = localStorage.getItem('data')
-    const email = localStorage.getItem('userEmail')
+    const token = sessionStorage.getItem('token')
+    const email = sessionStorage.getItem('userEmail')
     const [trips,setTrips] = useState([])
+    const [categories,setCategories]= useState([])
     const [reLoad, setReload] = useState(false)
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [mode, setMode] = useState('add')
     const [actionId, setActionid] = useState('')
     const [itemsCount, setItemsCount] = useState(0)
 
-    console.log(data)
-
     const deleteItem = (id) =>{
-        console.log(id)
         axios.delete(`http://localhost:8800/api/deleteExpense/${id}`)
         .then(res => console.log(res.data))
         window.location.reload()
@@ -48,6 +45,10 @@ function Home(){
     }
 
 
+    const reFresh = () =>{
+        setReload(!reLoad)
+    }
+
     useEffect(()=>{
         if(token){
             setIsAuthenticated(true)
@@ -56,12 +57,23 @@ function Home(){
                     Authorization: `Bearer ${token}`
                 },
             }).then(res => {
-                console.log(res.data)
                 setTrips(res.data)
                 setItemsCount(res.data.length)
-                setReload(true)
             })
         }
+    },[reLoad])
+    useEffect(()=>{
+        if(token){
+            axios.get(`http://localhost:8800/api/categories/${email}`,{
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+            }).then(res => {
+                console.log(res.data)
+                setCategories(res.data[0].categories)
+                console.log(categories)
+            })
+        } 
     },[reLoad])
     if(!isAuthenticated){
         return(
@@ -127,10 +139,9 @@ function Home(){
                                                 <div className="col-lg-4">
                                                     <label className="mb-2">Category</label>
                                                     <select name="selectCategory" className="form-select">
-                                                        <option value="">Food</option>
-                                                        <option value="">Accomodation</option>
-                                                        <option value="">Travel</option>
-                                                        <option value="">Others</option>
+                                                    {categories.map(category=>{
+                                                        return <option>{category}</option>
+                                                    })}
                                                     </select>
                                                 </div>
                                                 <div className="col-lg-4">
@@ -149,17 +160,17 @@ function Home(){
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="optionRow">
+                                    {/* <div className="optionRow">
                                         <h2 className="h5 fw-bold mb-2">Add new category</h2>
                                         <div className="row">
                                             <div className="col-7">
-                                                <input type="text" name="" id="" className="form-control"/>
+                                                <input type="text" value={newCategory.category} onChange={(e)=>setNewCategory({category:e.target.value})} className="form-control"/>
                                             </div>
                                             <div className="col-5">
-                                                <button className="btn btn-primary">Add Category</button>
+                                                <button className="btn btn-primary" onClick={addNewCategory}>Add Category</button>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                 </div>
@@ -243,7 +254,7 @@ function Home(){
                 </div>
             </section>
             </div>
-            <AddExpense email={email} id={actionId} mode={mode} />
+            <AddExpense reFresh={reFresh}  categories={categories} email={email} id={actionId} mode={mode} />
         </div>
     )
 }

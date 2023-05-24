@@ -19,15 +19,12 @@ function Login(){
           });
     }
     function login(){
-        // console.log(user)
         axios.post('http://localhost:8800/api/login',user).then(res => {
-        console.log(res.data)
         if(res.data.token){
             document.querySelector('.errorMsg').classList.remove('active')
-            localStorage.setItem('data',res.data.user)
-            localStorage.setItem('token',res.data.token)
-            localStorage.setItem('isLogin',true)
-            localStorage.setItem('userEmail',res.data.user[0].email)
+            sessionStorage.setItem('token',res.data.token)
+            sessionStorage.setItem('isLogin',true)
+            sessionStorage.setItem('userEmail',res.data.user[0].email)
             navigate('/home')
         }
         else{
