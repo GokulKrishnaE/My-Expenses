@@ -1,0 +1,21 @@
+/* custom / temporary styling */
+span.p-calendar{
+    display: block;
+    width: 100%;
+}
+span.p-calendar input{
+    width: 100% !important;
+    border-radius: 0;
+    max-height: 38px;
+}
+.p-datepicker{
+    z-index: 10002 !important;
+}
+.p-datatable .p-datatable-thead > tr > th{
+    background-color: transparent !important;
+}
+.historySearch{
+    max-width: 300px;
+    width: 100%;
+    margin-block: 20px;
+}

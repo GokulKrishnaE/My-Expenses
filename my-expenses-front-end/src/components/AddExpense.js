@@ -1,18 +1,29 @@
 import { useState } from "react"
 import axios from 'axios'
 import { Navigate, useNavigate } from "react-router-dom"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Calendar } from 'primereact/calendar';
 
 function AddExpense({email,categories,reFresh}){
-
-  console.log('addexpense renderd')
-
+  
   const [newCategory,setNewCategory] = useState({category: ''})
   const [newExpense, setNewExpense] = useState({
     email: email,
     title: '',
     category: 'food',
     date: '',
-    amount: ''
+    month: '',
+    year: '',
+    amount: '',
+  })
+  const [newEarning, setNewEarning] = useState({
+    email: email,
+    title: '',
+    date: '',
+    month: '',
+    year: '',
+    amount: '',
   })
 
 
@@ -21,6 +32,41 @@ function AddExpense({email,categories,reFresh}){
     setNewExpense({
       ...newExpense,
       [e.target.name]: value
+    })
+  }
+  function handleEarning(e){
+    const value = e.target.value;
+    setNewEarning({
+      ...newEarning,
+      [e.target.name]: value
+    })
+  }
+
+
+  function handleDate(e){
+    const value = e.target.value;
+    var date = value.getDate();
+    var month = value.getMonth() + 1;
+    var year = value.getFullYear();
+    var dateStr = date + "/" + month + "/" + year;
+    setNewExpense({
+      ...newExpense,
+      date: dateStr,
+      month:month,
+      year: year
+    })
+  }
+  function handleDateEarning(e){
+    const value = e.target.value;
+    var date = value.getDate();
+    var month = value.getMonth() + 1;
+    var year = value.getFullYear();
+    var dateStr = date + "/" + month + "/" + year;
+    setNewEarning({
+      ...newEarning,
+      date: dateStr,
+      month:month,
+      year: year
     })
   }
 
@@ -41,6 +87,42 @@ function AddExpense({email,categories,reFresh}){
       await axios.post(url,newExpense)
       .then(res => {
           console.log(res.data)
+          toast('item has been added',{
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            type: "success"
+          })
+          reFresh()
+      })
+    }  
+    else{
+      document.querySelector('.errorMsg').classList.add('active')
+    }
+  }
+  const addEarning = async () =>{
+    if(newEarning.title && newEarning.date && newEarning.amount){
+      document.querySelector('.errorMsg').classList.remove('active')
+      const url = `http://localhost:8800/api/addEarning/${email}`
+      await axios.post(url,newEarning)
+      .then(res => {
+          console.log(res.data)
+          toast('New Earning has been added',{
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            type: "success"
+          })
           reFresh()
       })
     }  
@@ -50,6 +132,7 @@ function AddExpense({email,categories,reFresh}){
   }
 
     return(
+       <>
         <div className="modal fade" id="addExpenseModal">
             <div className="modal-dialog modal-dialog-centered modal-lg">
               <div className="modal-content">
@@ -65,7 +148,7 @@ function AddExpense({email,categories,reFresh}){
                     <div className="form-group">
                         <div className="d-flex justify-content-between">
                             <label className="label">Category</label>
-                            <a href="javascript:void(0)" data-bs-toggle="collapse" data-bs-target="#addCategoryForm"><i className="fas fa-plus"></i> Add a category</a>
+                            <a href="#" data-bs-toggle="collapse" data-bs-target="#addCategoryForm"><i className="fas fa-plus"></i> Add a category</a>
                         </div>
                         <div className="form-group collapse" id="addCategoryForm">
                           <div className="row">
@@ -73,33 +156,65 @@ function AddExpense({email,categories,reFresh}){
                               <input type="text" value={newCategory.category} onChange={(e)=>setNewCategory({category:e.target.value})} className="form-control"/>
                             </div>
                             <div className="col-5">
-                              <button className="btn btn-primary" onClick={addNewCategory}><i class="fas fa-plus"></i></button>
+                              <button className="btn btn-primary" onClick={addNewCategory}><i className="fas fa-plus"></i></button>
                             </div>
                           </div>
                         </div>
                         <select name="category" className="form-select" value={newExpense.category} onChange={handleAdd}>
-                          {categories.map(category=>{
-                            return <option>{category}</option>
+                          {categories.map((category,index)=>{
+                            return <option key={index}>{category}</option>
                           })}
                         </select>
                     </div>
                     <div className="form-group">
                         <label className="label">Date</label>
-                        <input type="date" name="date" className="form-control" value={newExpense.date} onChange={handleAdd}/>
+                        <Calendar value={newExpense.date} onChange={handleDate} dateFormat="dd/mm/yy" />
+                        {/* <input type="date" name="date" className="form-control" value={newExpense.date} onChange={handleAdd}/> */}
                     </div>
                     <div className="form-group">
                         <label className="label">Cost</label>
                         <input type="number" name="amount" className="form-control" value={newExpense.amount} onChange={handleAdd}/>
                     </div>
+                    <p className="errorMsg">Fields can't be empty</p>
                 </div>
-                <p className="errorMsg">Fields can't be empty</p>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                   <button type="button" className="btn btn-primary" onClick={addExpense}>Add Expense</button>
                 </div>
               </div>
             </div>
+        </div>
+        <div className="modal fade" id="addEarningModal">
+        <div className="modal-dialog modal-dialog-centered modal-lg">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="addEarningModalLabel">Add Earning</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div className="modal-body">
+            <div className="form-group">
+                    <label className="label">Title</label>
+                    <input type="text" className="form-control" name="title" value={newEarning.title} onChange={handleEarning}/>
+                </div>
+                <div className="form-group">
+                    <label className="label">Date</label>
+                    <Calendar value={newEarning.date} onChange={handleDateEarning} dateFormat="dd/mm/yy" />
+                    {/* <input type="date" name="date" className="form-control" value={newEarning.date} onChange={handleEarning}/> */}
+                </div>
+                <div className="form-group">
+                    <label className="label">Amount</label>
+                    <input type="number" name="amount" className="form-control" value={newEarning.amount} onChange={handleEarning}/>
+                </div>
+                <p className="errorMsg">Fields can't be empty</p>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" className="btn btn-primary" onClick={addEarning}>Add Earning</button>
+            </div>
           </div>
+        </div>
+        </div>
+       </>
     )
 }
 

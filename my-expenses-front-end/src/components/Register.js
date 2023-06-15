@@ -80,8 +80,8 @@ const Register = () => {
                             <button onClick={register} className="btn btn-primary">Register</button>
                             <p className="errorMsg">Please fill all fields</p>
                             <p className="errorMsg"></p>
-                            <a className="mt-4" href="javascript:void(0)">Forgot password?</a>
-                            <p className="mt-4 mb-1" >Aleady have an account?</p><a href="javascript:void(0)" onClick={login}>Login here</a>
+                            <a className="mt-4" href="#">Forgot password?</a>
+                            <p className="mt-4 mb-1" >Aleady have an account?</p><a href="#" onClick={login}>Login here</a>
                         </div>
                         </div>
                     </div>

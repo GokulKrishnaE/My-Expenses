@@ -25,6 +25,7 @@ function Login(){
             sessionStorage.setItem('token',res.data.token)
             sessionStorage.setItem('isLogin',true)
             sessionStorage.setItem('userEmail',res.data.user[0].email)
+            sessionStorage.setItem('userName',res.data.user[0].username)
             navigate('/home')
         }
         else{
@@ -62,7 +63,7 @@ function Login(){
                         <div className="mt-4">
                             <button onClick={login} className="btn btn-primary">Login</button>
                             <p className="errorMsg"></p>
-                            <a className="mt-4" href="javascript:void(0)">Forgot password?</a>
+                            <a className="mt-4" href="#">Forgot password?</a>
                             <p className="mt-4" onClick={register}>Does not have an account? <a href="javascript:void(0">Sign up here</a></p>
                         </div>
                         </div>
