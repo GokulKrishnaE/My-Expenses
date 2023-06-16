@@ -7,16 +7,12 @@ import {FilterMatchMode,FilterOperator } from 'primereact/api'
 import HomeChartEarning from './Home-Chart-Earning';
 import HomeChartSpending from './Home-Chart-Spending';
 
-// import {InputText} from 'primereact/inputtext'
-
-// primereact css
-
 
 
 const HomeHistoryOverview = ({historyData}) => {
 
     const homeContextData = useContext(HomeContext)
-
+    // datatable filters
     const [filters,setFilteres] = useState({
         global: {value:null,matchMode: FilterMatchMode.CONTAINS},
         category: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] }
@@ -27,11 +23,13 @@ const HomeHistoryOverview = ({historyData}) => {
     const totalEarnigs= historyData.totalEarnigs
     const legendArray= historyData.legendArray
     const earnChartData = historyData.earnChartData
+    // taking data from context
     const expenseData = homeContextData.expenseData
     const earningsData = homeContextData.earningsData
+
     const itemsCount = expenseData.length
     const [toggleSpendEarn,SetToggleSpendEarn] = useState('spend')
-    console.log(itemsCount)
+
     // delete item from table
     const deleteItem = (id) =>{
         console.log(id)
@@ -61,7 +59,7 @@ const HomeHistoryOverview = ({historyData}) => {
             <div className="col-lg-8">
                 <div className="widgetBox widgetHistory mb-0">
                 <div className='d-md-flex justify-content-between align-items-center'>
-                <div className="d-md-flex">
+                <div className="d-flex">
                 {toggleSpendEarn === 'spend' ? <h2 className="widgetTitle">My Spendings</h2> : <h2 className="widgetTitle">My Earnings</h2>}
                     <div class="itemSwitch toggleButton ms-3">
                         <input type="checkbox" name="itemswitch" id="itemswitch" onChange={spendEarnToggle}/>
@@ -100,10 +98,17 @@ const HomeHistoryOverview = ({historyData}) => {
                         </div>
                     </div>
                     <ul className="list-unstyled chartLegend overviewLegend">{
-                        legendArray.map((legends,index)=>{
-                            return (<li key={index} className="legend1 d-flex justify-content-between align-items-center">
+                        toggleSpendEarn === 'spend'
+                        ? legendArray.map((legends,index)=>{
+                            return (<li key={index} className={`legend${index+1} d-flex justify-content-between align-items-center`}>
                             <p className="legendTitle">{legends.legend}</p>
                             <p className="legendValue">{legends.value}</p>
+                            </li>)
+                        })
+                        : earnChartData.map((data,index)=>{
+                            return (<li key={index} className={`legend${index+1} d-flex justify-content-between align-items-center`}>
+                            <p className="legendTitle">{data.legend}</p>
+                            <p className="legendValue">{data.data}</p>
                             </li>)
                         })
                     }

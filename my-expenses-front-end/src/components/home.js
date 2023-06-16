@@ -4,12 +4,11 @@ import axios from "axios";
 import AddExpense from "./AddExpense";
 import HomeHistoryOverview from "./home-page/Home-History-Overview";
 
+    // context for home components
 const HomeContext = createContext()
 
 
 function Home(){
-
-    // context for home components
 
     const token = sessionStorage.getItem('token')
     const email = sessionStorage.getItem('userEmail')
@@ -19,24 +18,19 @@ function Home(){
     const [categories,setCategories]= useState([])
     const [reLoad, setReload] = useState(false)
     const [isAuthenticated, setIsAuthenticated] = useState(false)
-    const [mode, setMode] = useState('add')
     const [actionId, setActionid] = useState('')
 
     let categoriesArray = []
     const addedCategories = []
     let legendArray = []
     const SpendChartData= []
-    const earnChartData={
-        data: [],
-        legend: []
-    }
+    const earnChartData=[]
     let totalAmount = 0
     let totalEarnigs = 0
 
 
 
     // home context data
-
     const homeContextData  = {
         expenseData: expenseData,
         earningsData: earningsData,
@@ -80,25 +74,14 @@ function Home(){
         legendArray: legendArray,
     }
 
-
     homeContextData.categoriesArray = categoriesArray
 
-    // addedCategories.forEach((legend)=>{
-    //     categoriesArray.forEach(category =>{
-    //         if(legend == category.categoryName){
-    //             SpendChartData.push(category.value)
-    //             let legends={
-    //                 legend: legend,
-    //                 value: category.value
-    //             }
-    //             legendArray.push(legends)
-    //         }
-    //     })
-    // })
-
     earningsData.forEach((earning)=>{
-        earnChartData.data.push(earning.amount)
-        earnChartData.legend.push(earning.title)
+        let data = {
+            data:earning.amount,
+            legend: earning.title
+        }
+        earnChartData.push(data)
     })
 
     const reFresh = () =>{
@@ -188,7 +171,7 @@ function Home(){
                     <HomeHistoryOverview historyData={historyData}/>
                 </section>
                 </div>
-                <AddExpense reFresh={reFresh}  categories={categories} email={email} id={actionId} mode={mode} />
+                <AddExpense reFresh={reFresh}  categories={categories} email={email} id={actionId} />
             </div>
         </HomeContext.Provider>
     )

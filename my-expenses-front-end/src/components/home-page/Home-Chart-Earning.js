@@ -12,11 +12,15 @@ import {Doughnut} from 'react-chartjs-2'
 Chartjs.register(ArcElement,Tooltip,Legend)
 
 const HomeChartEarning = ({earnChartData}) => {
+    let chartData = []
+    earnChartData.forEach(data=>{
+      chartData.push(data.data)
+    })
     const data = {
         labels: false,
         datasets: [{
             labels: 'Poll',
-            data: earnChartData.data,
+            data: chartData,
             backgroundColor: ["#5656ff","#56b1ff","#56ff92","#ffb714"],
             borderColor: ["#5656ff","#56b1ff","#56ff92","#ffb714"]
         }]
