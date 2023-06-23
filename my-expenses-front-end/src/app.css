@@ -19,3 +19,16 @@ span.p-calendar input{
     width: 100%;
     margin-block: 20px;
 }
+.notAuth{
+    display: grid;
+    place-items: center;
+    height: 100vh;
+}
+.notAuth h1{
+    color: #ff5a5a;
+    padding-left: 30px;
+    position: relative;
+}
+.p-dropdown{
+    border-radius: 0 !important;
+}

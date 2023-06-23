@@ -2,7 +2,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
 import Home from './components/home';
-import FullDetails from './components/home-page/FullDetails';
+import BookDetails from './components/home-page/Book-Details';
 import { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 
@@ -33,7 +33,7 @@ function App() {
         <Route path="/" element={<Login></Login>}></Route>
         <Route path="/register" element={<Register></Register>}></Route>
         <Route path="/home" element={<Home></Home>}></Route>
-        <Route path="/fulldetails" element={<FullDetails></FullDetails>}></Route>
+        <Route path="/bookDetails" element={<BookDetails></BookDetails>}></Route>
       </Routes>
       <ToastContainer />
     </>

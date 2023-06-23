@@ -1,0 +1,209 @@
+import React from 'react';
+import DoughnutChart from './Doughnut-chart';
+import { useState,useEffect,useContext } from 'react';
+import axios from "axios";
+import { HomeContext } from '../home';
+
+const Compare = () => {
+
+    const homeContextData = useContext(HomeContext)
+    const token = homeContextData.token
+
+    const [leftMonth,setLeftMonth] = useState('June')
+    const [rightMonth,setRightMonth] = useState('June')
+    const [leftYear,setLeftYear] = useState('2023')
+    const [rightYear,setRightYear] = useState('2023')
+    const [reLoad, setReload] = useState(false)
+    const [leftSideData,setLeftSideData] = useState([])
+    const [rightSideData,setRightSideData] = useState([])
+
+    let leftCategoriesArray = []
+    let leftAddedCategories = []
+    let rightCategoriesArray = []
+    let rightAddedCategories = []
+    let leftLegendArray = []
+    let rightLegendArray = []
+    const leftChartData= []
+    const rightChartData= []
+    let leftAmount =0
+    let rightAmount =0
+
+    let leftData = {
+        year: leftYear,
+        month: leftMonth
+    }
+    let rightData = {
+        year: rightYear,
+        month: rightMonth
+    }
+
+    useEffect(()=>{
+        if(token){
+            axios.post(`http://localhost:8800/api/compare`,leftData,{
+                headers: {
+                    authorization: `Bearer ${token}`
+                },
+            }).then(res => {
+                setLeftSideData(res.data)
+            })
+        }
+    },[leftMonth,leftYear])
+    useEffect(()=>{
+        if(token){
+            axios.post(`http://localhost:8800/api/compare`,rightData,{
+                headers: {
+                    authorization: `Bearer ${token}`
+                },
+            }).then(res => {
+                setRightSideData(res.data)
+            })
+        }
+    },[rightMonth,rightYear])
+
+    leftSideData.length !=0 && leftSideData.forEach((left)=>{
+        leftAddedCategories.indexOf(left.category) === -1 && leftAddedCategories.push(left.category)
+    })
+    leftSideData.length !=0 && leftAddedCategories.forEach((category,index) =>{
+        leftCategoriesArray.push({
+            categoryName: category,
+            value: 0
+        })
+        leftSideData.forEach(left =>{
+            if(leftCategoriesArray[index].categoryName == left.category){
+                leftCategoriesArray[index].value += left.amount
+            }
+        })
+        leftChartData.push(leftCategoriesArray[index].value)
+        let legends={
+            legend: leftCategoriesArray[index].categoryName,
+            value: leftCategoriesArray[index].value
+        }
+        leftLegendArray.push(legends)
+    })
+
+    rightSideData.length !=0 && rightSideData.forEach((right)=>{
+        rightAddedCategories.indexOf(right.category) === -1 && rightAddedCategories.push(right.category)
+    })
+    rightSideData.length !=0 && rightAddedCategories.forEach((category,index) =>{
+        rightCategoriesArray.push({
+            categoryName: category,
+            value: 0
+        })
+        rightSideData.forEach(right =>{
+            if(rightCategoriesArray[index].categoryName == right.category){
+                rightCategoriesArray[index].value += right.amount
+            }
+        })
+        rightChartData.push(rightCategoriesArray[index].value)
+        let legends={
+            legend: leftCategoriesArray[index].categoryName,
+            value: leftCategoriesArray[index].value
+        }
+        rightLegendArray.push(legends)
+    })
+    leftSideData.forEach(left =>{
+        leftAmount+=left.amount
+    })
+    rightSideData.forEach(right =>{
+        rightAmount+=right.amount
+    })
+    return (
+        <div>
+        <div class="modal fade" id="compareModal" tabindex="-1" aria-labelledby="compareModal" aria-hidden="true">
+              <div class="modal-dialog modal-lg modal-dialog-centered">
+                  <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="compareModal">Compare</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <p>Select the months and years to compare</p>
+                      <div>
+                          <div className='row gx-5'>
+                              <div className='col-md-6'>
+                                  <div className='compareSelectors'>
+                                      <div className='row'>
+                                          <div className='col-sm-6'>
+                                              <select className='form-select' value={leftMonth} onChange={(e)=>setLeftMonth(e.target.value)}>
+                                                  <option>January</option>
+                                                  <option>February</option>
+                                                  <option>March</option>
+                                                  <option>April</option>
+                                                  <option>May</option>
+                                                  <option>June</option>
+                                              </select>
+                                          </div>
+                                          <div className='col-sm-6'>
+                                              <select className='form-select mb-4' value={leftYear} onChange={(e)=>setLeftYear(e.target.value)}>
+                                                  <option>2023</option>
+                                              </select>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div className="chartOuter overviewChart">
+                                      <div className="chartWrapper">
+                                        <DoughnutChart chartData={leftChartData} />
+                                      <p className="chartInsideData">
+                                        <span>₹ {leftAmount}</span>
+                                      </p>
+                                      </div>
+                                  </div>
+                                  <ul className="list-unstyled chartLegend overviewLegend">{
+                                      leftLegendArray.map((legends,index)=>{
+                                        return (<li key={index} className={`legend${index+1} d-flex justify-content-between align-items-center`}>
+                                        <p className="legendTitle">{legends.legend}</p>
+                                        <p className="legendValue">{legends.value}</p>
+                                        </li>)
+                                    })
+                                  }
+                                  </ul>
+                              </div>
+                              <div className='col-md-6'>
+                                  <div className='compareSelectors'>
+                                      <div className='row'>
+                                      <div className='col-sm-6'>
+                                              <select className='form-select' value={rightMonth} onChange={(e)=>setRightMonth(e.target.value)}>
+                                                  <option>January</option>
+                                                  <option>February</option>
+                                                  <option>March</option>
+                                                  <option>April</option>
+                                                  <option>May</option>
+                                                  <option>June</option>
+                                              </select>
+                                          </div>
+                                          <div className='col-sm-6'>
+                                              <select className='form-select mb-4' value={rightYear} onChange={(e)=>setRightYear(e.target.value)}>
+                                                  <option>2023</option>
+                                              </select>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div className="chartOuter overviewChart">
+                                      <div className="chartWrapper">
+                                        <DoughnutChart chartData={rightChartData} />
+                                      <p className="chartInsideData">
+                                        <span>₹ {rightAmount}</span>
+                                      </p>
+                                      </div>
+                                  </div>
+                                  <ul className="list-unstyled chartLegend overviewLegend">{
+                                      rightLegendArray.map((legends,index)=>{
+                                        return (<li key={index} className={`legend${index+1} d-flex justify-content-between align-items-center`}>
+                                        <p className="legendTitle">{legends.legend}</p>
+                                        <p className="legendValue">{legends.value}</p>
+                                        </li>)
+                                    })
+                                  }
+                                  </ul>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  </div>
+              </div>
+          </div>  
+      </div>
+    );
+}
+
+export default Compare;

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const FullDetails = () => {
+const BookDetails = () => {
     return (
         <div>
            <div className='wrapper'>
@@ -12,4 +12,4 @@ const FullDetails = () => {
     );
 }
 
-export default FullDetails;
+export default BookDetails;

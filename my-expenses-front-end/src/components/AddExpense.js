@@ -1,11 +1,16 @@
-import { useState } from "react"
+import { useState,useContext } from "react"
 import axios from 'axios'
 import { Navigate, useNavigate } from "react-router-dom"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Calendar } from 'primereact/calendar';
 
+import { HomeContext } from './home';
+
 function AddExpense({email,categories,reFresh}){
+
+  const homeContextData = useContext(HomeContext)
+  const token = homeContextData.token
   
   const [newCategory,setNewCategory] = useState({category: ''})
   const [newExpense, setNewExpense] = useState({
@@ -46,7 +51,10 @@ function AddExpense({email,categories,reFresh}){
   function handleDate(e){
     const value = e.target.value;
     var date = value.getDate();
-    var month = value.getMonth() + 1;
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    var month = monthNames[value.getMonth()];
     var year = value.getFullYear();
     var dateStr = date + "/" + month + "/" + year;
     setNewExpense({
@@ -59,7 +67,10 @@ function AddExpense({email,categories,reFresh}){
   function handleDateEarning(e){
     const value = e.target.value;
     var date = value.getDate();
-    var month = value.getMonth() + 1;
+      const monthNames = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    var month = monthNames[value.getMonth()];
     var year = value.getFullYear();
     var dateStr = date + "/" + month + "/" + year;
     setNewEarning({
@@ -72,8 +83,12 @@ function AddExpense({email,categories,reFresh}){
 
   const addNewCategory = async () =>{
     console.log(newCategory)
-    const url = `http://localhost:8800/api/categories/add/${email}`
-    await axios.post(url,newCategory)
+    const url = `http://localhost:8800/api/categories/add/`
+    await axios.post(url,newCategory,{
+      headers: {
+          Authorization: `Bearer ${token}`
+      },
+  })
     .then(res => {
         console.log(res)
         reFresh()
@@ -83,8 +98,12 @@ function AddExpense({email,categories,reFresh}){
   const addExpense = async () =>{
     if(newExpense.title && newExpense.category && newExpense.date && newExpense.amount){
       document.querySelector('.errorMsg').classList.remove('active')
-      const url = `http://localhost:8800/api/addExpense/${email}`
-      await axios.post(url,newExpense)
+      const url = `http://localhost:8800/api/addExpense/`
+      await axios.post(url,newExpense,{
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    })
       .then(res => {
           console.log(res.data)
           toast('item has been added',{
@@ -108,8 +127,12 @@ function AddExpense({email,categories,reFresh}){
   const addEarning = async () =>{
     if(newEarning.title && newEarning.date && newEarning.amount){
       document.querySelector('.errorMsg').classList.remove('active')
-      const url = `http://localhost:8800/api/addEarning/${email}`
-      await axios.post(url,newEarning)
+      const url = `http://localhost:8800/api/addEarning/`
+      await axios.post(url,newEarning,{
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    })
       .then(res => {
           console.log(res.data)
           toast('New Earning has been added',{

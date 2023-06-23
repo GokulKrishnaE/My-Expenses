@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import AddExpense from "./AddExpense";
 import HomeHistoryOverview from "./home-page/Home-History-Overview";
+import HomeBookView from "./home-page/Home-Book-View";
 
     // context for home components
 const HomeContext = createContext()
@@ -34,8 +35,11 @@ function Home(){
     const homeContextData  = {
         expenseData: expenseData,
         earningsData: earningsData,
-        categoriesArray: []
+        categoriesArray: [],
+        token: token
     }
+
+    console.log(expenseData)
 
     expenseData.forEach((expense)=>{
         addedCategories.indexOf(expense.category) === -1 && addedCategories.push(expense.category)
@@ -91,9 +95,9 @@ function Home(){
     useEffect(()=>{
         if(token){
             setIsAuthenticated(true)
-            axios.get(`http://localhost:8800/api/${email}`,{
+            axios.get(`http://localhost:8800/api/`,{
                 headers: {
-                    Authorization: `Bearer ${token}`
+                    authorization: `Bearer ${token}`
                 },
             }).then(res => {
                 setExpenseData(res.data)
@@ -102,7 +106,7 @@ function Home(){
     },[reLoad])
     useEffect(()=>{
         if(token){
-            axios.get(`http://localhost:8800/api/categories/${email}`,{
+            axios.get(`http://localhost:8800/api/categories/`,{
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -113,7 +117,7 @@ function Home(){
     },[reLoad])
     useEffect(()=>{
         if(token){
-            axios.get(`http://localhost:8800/api/getEarnigs/${email}`,{
+            axios.get(`http://localhost:8800/api/getEarnigs/`,{
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -125,7 +129,14 @@ function Home(){
     if(!isAuthenticated){
         return(
             <>
-            <h1>you are not autherized to visit this site</h1>
+            <div className="container">
+                <div className="notAuth">
+                    <div className="text-center">
+                        <h1>Error:401!</h1>
+                        <p>You are not authorized to visit the page. Please login or register</p>
+                    </div>
+                </div>
+            </div>
             </>
         )
     }
@@ -168,7 +179,22 @@ function Home(){
                             </div>
                         </div>
                     </div>
-                    <HomeHistoryOverview historyData={historyData}/>
+                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="overview-tab" data-bs-toggle="pill" data-bs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="true">Overview</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="books-tab" data-bs-toggle="pill" data-bs-target="#books" type="button" role="tab" aria-controls="books" aria-selected="false">My Books</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="pills-tabContent">
+                        <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview">
+                            <HomeHistoryOverview historyData={historyData}/>
+                        </div>
+                        <div class="tab-pane fade" id="books" role="tabpanel" aria-labelledby="books">
+                            <HomeBookView reFresh={reFresh}/>
+                        </div>
+                    </div>
                 </section>
                 </div>
                 <AddExpense reFresh={reFresh}  categories={categories} email={email} id={actionId} />

@@ -4,8 +4,8 @@ import { HomeContext } from '../home';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import {FilterMatchMode,FilterOperator } from 'primereact/api'
-import HomeChartEarning from './Home-Chart-Earning';
-import HomeChartSpending from './Home-Chart-Spending';
+import DoughnutChart from './Doughnut-chart';
+import Compare from './Compare';
 
 
 
@@ -22,10 +22,15 @@ const HomeHistoryOverview = ({historyData}) => {
     const totalAmount= historyData.totalAmount
     const totalEarnigs= historyData.totalEarnigs
     const legendArray= historyData.legendArray
-    const earnChartData = historyData.earnChartData
+    const earnChartDataObj = historyData.earnChartData
+    let earnChartData = []
+    earnChartDataObj.forEach(data=>{
+        earnChartData.push(data.data)
+    })
     // taking data from context
     const expenseData = homeContextData.expenseData
     const earningsData = homeContextData.earningsData
+    const token = homeContextData.token
 
     const itemsCount = expenseData.length
     const [toggleSpendEarn,SetToggleSpendEarn] = useState('spend')
@@ -33,7 +38,11 @@ const HomeHistoryOverview = ({historyData}) => {
     // delete item from table
     const deleteItem = (id) =>{
         console.log(id)
-        axios.delete(`http://localhost:8800/api/deleteExpense/${id}`)
+        axios.delete(`http://localhost:8800/api/deleteExpense/${id}`,{
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        })
         .then(res =>{})
         window.location.reload()
     }
@@ -59,11 +68,11 @@ const HomeHistoryOverview = ({historyData}) => {
             <div className="col-lg-8">
                 <div className="widgetBox widgetHistory mb-0">
                 <div className='d-md-flex justify-content-between align-items-center'>
-                <div className="d-flex">
+                <div className="d-sm-flex align-items-center">
                 {toggleSpendEarn === 'spend' ? <h2 className="widgetTitle">My Spendings</h2> : <h2 className="widgetTitle">My Earnings</h2>}
-                    <div class="itemSwitch toggleButton ms-3">
+                    <div class="toggleButton overviewToggle ms-sm-3">
                         <input type="checkbox" name="itemswitch" id="itemswitch" onChange={spendEarnToggle}/>
-                        <label for="itemswitch"></label>
+                        <label for="itemswitch">Switch to {toggleSpendEarn}<i className='fas fa-repeat ms-2'></i></label>
                     </div>
                     </div>
                     <div class="input-group historySearch mb-3">
@@ -88,10 +97,13 @@ const HomeHistoryOverview = ({historyData}) => {
             </div>
             <div className="col-lg-4">
                 <div className="widgetBox h-100">
-                <h2 className="widgetTitle">Overview</h2>
+                    <div className='d-flex justify-content-between'>
+                        {toggleSpendEarn === 'spend' ? <h2 className="widgetTitle">Overview - Spendings</h2> : <h2 className="widgetTitle">Overview - Earnings</h2>}
+                        <p role='button' className='fw-bold text-primary' data-bs-toggle="modal" data-bs-target="#compareModal">Compare<i class="fa-solid fa-repeat ms-2"></i></p>
+                    </div>
                     <div className="chartOuter overviewChart">
                         <div className="chartWrapper">
-                        {toggleSpendEarn === 'spend' ? <HomeChartSpending SpendChartData={SpendChartData} /> : <HomeChartEarning earnChartData={earnChartData}/>}
+                        {toggleSpendEarn === 'spend' ? <DoughnutChart chartData={SpendChartData} /> : <DoughnutChart chartData={earnChartData}/>}
                         <p className="chartInsideData">
                             {toggleSpendEarn === 'spend' ? <span>₹ {totalAmount}</span> : <span>₹ {totalEarnigs}</span>}
                         </p>
@@ -115,7 +127,10 @@ const HomeHistoryOverview = ({historyData}) => {
                     </ul>
                 </div>
             </div>
-        </div></>
+        </div>
+        <Compare/>
+      
+        </>
     );
 }
 

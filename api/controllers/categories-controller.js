@@ -1,7 +1,7 @@
 import pool from '../db.js'
 
 export const getCategories = async (req,res) =>{
-    const userEmail = req.params.userEmail
+    const userEmail = req.email
     try{
         const data = await pool.query(`SELECT * FROM CATEGORIES WHERE EMAIL = '${userEmail}'
         `)
@@ -12,7 +12,7 @@ export const getCategories = async (req,res) =>{
     }
 }
 export const addCategory = async (req,res) =>{
-    const userEmail = req.params.userEmail
+    const userEmail = req.email
     const category = req.body.category
     try{
         const data = await pool.query(`UPDATE CATEGORIES SET CATEGORIES = array_append(CATEGORIES,'${category}') WHERE EMAIL = '${userEmail}'
@@ -24,8 +24,7 @@ export const addCategory = async (req,res) =>{
     }
 }
 export const createCategory = async (req,res) =>{
-    const userEmail = req.params.userEmail
-    console.log(userEmail)
+    const userEmail = req.email
     try{
         const data = await pool.query(`INSERT INTO CATEGORIES(EMAIL,CATEGORIES) VALUES('${userEmail}','{food,travel,accomodation,others}')`)
         res.json(data.rows)

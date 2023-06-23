@@ -8,7 +8,9 @@ export const login = async (req,res) =>{
         const data = await pool.query(`SELECT * FROM USERS WHERE USERNAME = '${username}' and PASSWORD = '${password}'`)
         if(data.rowCount !=0){
             const user = data.rows
-            const token = Jwt.sign({email: user.email, isAdmin: user.isAdmin},process.env.ACCESS_TOKEN_SECRET)
+            const payload = {email:user[0].email}
+            // const userData = {email: user.email, isAdmin: user.isAdmin}
+            const token = Jwt.sign(payload,process.env.ACCESS_TOKEN_SECRET)
             res.send({token: token, user: user})
         }
         else{

@@ -2,7 +2,7 @@ import pool from '../db.js'
 import {v4 as uuidv4} from 'uuid'
 
 export const getAllData = async (req,res) =>{
-    const userEmail = req.params.userEmail
+    const userEmail = req.email
     try{
         const data = await pool.query(`SELECT * FROM EXPENSES WHERE EMAIL = '${userEmail}'
         `)
@@ -13,7 +13,7 @@ export const getAllData = async (req,res) =>{
     }
 }
 export const getAllEarnings = async (req,res) =>{
-    const userEmail = req.params.userEmail
+    const userEmail = req.email
     try{
         const data = await pool.query(`SELECT * FROM EARNINGS WHERE EMAIL = '${userEmail}'
         `)
@@ -26,7 +26,7 @@ export const getAllEarnings = async (req,res) =>{
 
 export const addExpense = async (req,res) =>{
     const id = uuidv4()
-    const userEmail = req.params.userEmail
+    const userEmail = req.email
     const title = req.body.title
     const category = req.body.category || 'food'
     const date = req.body.date
@@ -43,7 +43,7 @@ export const addExpense = async (req,res) =>{
 }
 export const addEarning = async (req,res) =>{
     const id = uuidv4()
-    const userEmail = req.params.userEmail
+    const userEmail = req.email
     const title = req.body.title
     const category = req.body.category || 'food'
     const date = req.body.date
@@ -70,3 +70,19 @@ export const deleteExpense = async (req,res) =>{
     }
 }
 
+
+// get data for comparison
+
+export const getCompareData = async (req,res) =>{
+    const userEmail = req.email
+    const month = req.body.month
+    const year = req.body.year
+    try{
+        const data = await pool.query(`SELECT * FROM EXPENSES WHERE EMAIL = '${userEmail}' and MONTH = '${month}' and YEAR = '${year}'
+        `)
+        res.json(data.rows)
+    }
+    catch(err){
+        console.error(err)
+    }
+}
