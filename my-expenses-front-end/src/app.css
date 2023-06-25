@@ -32,3 +32,24 @@ span.p-calendar input{
 .p-dropdown{
     border-radius: 0 !important;
 }
+
+.widgetTitle2{
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+.bookDetailsChart{
+    max-width: 400px;
+    margin: auto;
+    width: 100%;
+    padding: 20px;
+}
+.addBookIcon{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 2rem;
+}
+.bookEditButton{
+    right: 60px;
+}

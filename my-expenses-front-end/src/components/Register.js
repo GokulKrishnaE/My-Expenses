@@ -30,7 +30,6 @@ const Register = () => {
                 if(res.data.status){
                     axios.post(`http://localhost:8800/api/categories/create/${newUser.email}`)
                     .then(res => {
-                        console.log(res.data)
                         localStorage.setItem('categoryadded',true)
                     })
                     navigate('/')

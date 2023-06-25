@@ -1,4 +1,4 @@
-import { useState,useContext } from "react"
+import { useState,useContext,useEffect } from "react"
 import axios from 'axios'
 import { Navigate, useNavigate } from "react-router-dom"
 import { ToastContainer, toast } from 'react-toastify';
@@ -11,12 +11,14 @@ function AddExpense({email,categories,reFresh}){
 
   const homeContextData = useContext(HomeContext)
   const token = homeContextData.token
+  const books = homeContextData.books
   
   const [newCategory,setNewCategory] = useState({category: ''})
   const [newExpense, setNewExpense] = useState({
     email: email,
     title: '',
     category: 'food',
+    bookname: '',
     date: '',
     month: '',
     year: '',
@@ -25,12 +27,31 @@ function AddExpense({email,categories,reFresh}){
   const [newEarning, setNewEarning] = useState({
     email: email,
     title: '',
+    bookname: '',
     date: '',
     month: '',
     year: '',
     amount: '',
   })
 
+  useEffect(()=>{
+      if(token){
+          axios.get(`http://localhost:8800/api/books/getBooks/`,{
+              headers: {
+                  Authorization: `Bearer ${token}`
+              },
+          }).then(res => {
+            setNewExpense({
+              ...newExpense,
+              bookname:res.data.firstbookName
+            })
+            setNewEarning({
+              ...newEarning,
+              bookname:res.data.firstbookName
+            })
+          })
+      } 
+  },[])
 
   function handleAdd(e){
     const value = e.target.value;
@@ -82,7 +103,6 @@ function AddExpense({email,categories,reFresh}){
   }
 
   const addNewCategory = async () =>{
-    console.log(newCategory)
     const url = `http://localhost:8800/api/categories/add/`
     await axios.post(url,newCategory,{
       headers: {
@@ -90,13 +110,12 @@ function AddExpense({email,categories,reFresh}){
       },
   })
     .then(res => {
-        console.log(res)
         reFresh()
     })
 }
 
   const addExpense = async () =>{
-    if(newExpense.title && newExpense.category && newExpense.date && newExpense.amount){
+    if(newExpense.title && newExpense.category && newExpense.date && newExpense.amount,newExpense.bookname){
       document.querySelector('.errorMsg').classList.remove('active')
       const url = `http://localhost:8800/api/addExpense/`
       await axios.post(url,newExpense,{
@@ -105,7 +124,6 @@ function AddExpense({email,categories,reFresh}){
         },
     })
       .then(res => {
-          console.log(res.data)
           toast('item has been added',{
             position: "top-center",
             autoClose: 2000,
@@ -125,7 +143,7 @@ function AddExpense({email,categories,reFresh}){
     }
   }
   const addEarning = async () =>{
-    if(newEarning.title && newEarning.date && newEarning.amount){
+    if(newEarning.title && newEarning.date && newEarning.amount && newEarning.bookname){
       document.querySelector('.errorMsg').classList.remove('active')
       const url = `http://localhost:8800/api/addEarning/`
       await axios.post(url,newEarning,{
@@ -134,7 +152,6 @@ function AddExpense({email,categories,reFresh}){
         },
     })
       .then(res => {
-          console.log(res.data)
           toast('New Earning has been added',{
             position: "top-center",
             autoClose: 2000,
@@ -190,6 +207,14 @@ function AddExpense({email,categories,reFresh}){
                         </select>
                     </div>
                     <div className="form-group">
+                        <label className="label">Book</label>
+                        <select name="bookname" className="form-select" value={newExpense.bookname}  onChange={handleAdd}>
+                          {books.map((book,index)=>{
+                            return <option key={index}>{book.bookname}</option>
+                          })}
+                        </select>
+                    </div>
+                    <div className="form-group">
                         <label className="label">Date</label>
                         <Calendar value={newExpense.date} onChange={handleDate} dateFormat="dd/mm/yy" />
                         {/* <input type="date" name="date" className="form-control" value={newExpense.date} onChange={handleAdd}/> */}
@@ -219,6 +244,14 @@ function AddExpense({email,categories,reFresh}){
                     <label className="label">Title</label>
                     <input type="text" className="form-control" name="title" value={newEarning.title} onChange={handleEarning}/>
                 </div>
+                <div className="form-group">
+                        <label className="label">Book</label>
+                        <select name="bookname" className="form-select" value={newEarning.bookname}  onChange={handleEarning}>
+                          {books.map((book,index)=>{
+                            return <option key={index}>{book.bookname}</option>
+                          })}
+                        </select>
+                    </div>
                 <div className="form-group">
                     <label className="label">Date</label>
                     <Calendar value={newEarning.date} onChange={handleDateEarning} dateFormat="dd/mm/yy" />

@@ -5,71 +5,37 @@ import AddExpense from "./AddExpense";
 import HomeHistoryOverview from "./home-page/Home-History-Overview";
 import HomeBookView from "./home-page/Home-Book-View";
 
-    // context for home components
+// context for home components
 const HomeContext = createContext()
 
 
 function Home(){
 
+
     const token = sessionStorage.getItem('token')
     const email = sessionStorage.getItem('userEmail')
     const userName = sessionStorage.getItem('userName')
-    const [earningsData,setEarningsData] = useState([])
-    const [expenseData,setExpenseData] = useState([])
+    const [books,setBooks] = useState([])
     const [categories,setCategories]= useState([])
     const [reLoad, setReload] = useState(false)
     const [isAuthenticated, setIsAuthenticated] = useState(false)
-    const [actionId, setActionid] = useState('')
-
-    let categoriesArray = []
-    const addedCategories = []
-    let legendArray = []
-    const SpendChartData= []
-    const earnChartData=[]
-    let totalAmount = 0
-    let totalEarnigs = 0
+    
+    // spending data states
+    const [expenseData,setExpenseData] = useState([])
+    const [categoriesArray,setCategoriesArray] = useState([])
+    const [SpendChartData,setSpendChartData] = useState([])
+    const [legendArray,setLegendArray] = useState([])
+    const [totalAmount,setTotalAmount] = useState()
 
 
-
-    // home context data
-    const homeContextData  = {
-        expenseData: expenseData,
-        earningsData: earningsData,
-        categoriesArray: [],
-        token: token
-    }
-
-    console.log(expenseData)
-
-    expenseData.forEach((expense)=>{
-        addedCategories.indexOf(expense.category) === -1 && addedCategories.push(expense.category)
-    })
-    addedCategories.forEach((category,index) =>{
-        categoriesArray.push({
-            categoryName: category,
-            value: 0
-        })
-        expenseData.forEach(expense =>{
-            if(categoriesArray[index].categoryName == expense.category){
-                categoriesArray[index].value += expense.amount
-            }
-        })
-        SpendChartData.push(categoriesArray[index].value)
-        let legends={
-            legend: categoriesArray[index].categoryName,
-            value: categoriesArray[index].value
-        }
-        legendArray.push(legends)
-    })
+    // earning data states
+    const [earningsData,setEarningsData] = useState([])
+    const [earnChartData,setEarnChartData] = useState([])
+    const [totalEarnigs,setTotalEarning] = useState(0)
 
 
-    expenseData.forEach(expense =>{
-        totalAmount+=expense.amount
-    })
-    earningsData.forEach(earning =>{
-        totalEarnigs+=earning.amount
-    })
 
+    // data for history component
     const historyData = {
         SpendChartData: SpendChartData,
         earnChartData:earnChartData,
@@ -78,19 +44,22 @@ function Home(){
         legendArray: legendArray,
     }
 
-    homeContextData.categoriesArray = categoriesArray
+    // home context data
+    const homeContextData  = {
+    expenseData: expenseData,
+    earningsData: earningsData,
+    categoriesArray: [],
+    books: books,
+    token: token,
+    }
 
-    earningsData.forEach((earning)=>{
-        let data = {
-            data:earning.amount,
-            legend: earning.title
-        }
-        earnChartData.push(data)
-    })
-
+    
+    // refreshing the component
     const reFresh = () =>{
         setReload(!reLoad)
     }
+
+    // api calls
 
     useEffect(()=>{
         if(token){
@@ -100,7 +69,11 @@ function Home(){
                     authorization: `Bearer ${token}`
                 },
             }).then(res => {
-                setExpenseData(res.data)
+                setExpenseData(res.data.expenseData)
+                setCategoriesArray(res.data.categoriesArray)
+                setSpendChartData(res.data.SpendChartData)
+                setLegendArray(res.data.legendArray)
+                setTotalAmount(res.data.totalAmount)
             })
         }
     },[reLoad])
@@ -122,10 +95,25 @@ function Home(){
                     Authorization: `Bearer ${token}`
                 },
             }).then(res => {
-                setEarningsData(res.data)
+                setEarningsData(res.data.earningsData)
+                setEarnChartData(res.data.earnChartData)
+                setTotalEarning(res.data.totalEarnigs)
             })
         } 
     },[reLoad])
+    useEffect(()=>{
+        if(token){
+            axios.get(`http://localhost:8800/api/books/getBooks/`,{
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+            }).then(res => {
+                setBooks(res.data.books)
+            })
+        } 
+    },[reLoad])
+
+    // checking if the user is authenticated
     if(!isAuthenticated){
         return(
             <>
@@ -140,10 +128,10 @@ function Home(){
             </>
         )
     }
+
     return(
         <HomeContext.Provider value={homeContextData}>
              <div className="wrapper">
-                <button className="addTrip" data-bs-toggle="modal" data-bs-target="#addExpenseModal"></button>
                 <div className="contentArea">
                 <section className="homePage pageComponent" id="homePage">
                     <div className="sectionTopArea">
@@ -151,53 +139,53 @@ function Home(){
                             <h2 className="sectionHeading">Dashboard</h2>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-5">
-                            <div class="welcomeWidget">
+                    <div className="row">
+                        <div className="col-md-5">
+                            <div className="welcomeWidget">
                                 <h3>Welcome {userName}!</h3>
                                 <p>Here is your overall details about your spending and earning. Click on the full details to view the detailed report.</p>
                             </div>
                         </div>
-                        <div class="col-md-7">
-                            <div class="totalFigures">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="widgetBox totalBox earning">
-                                            <h4>Earnings for this month <i class="fa fa-arrow-up text-success"></i></h4>
-                                            <h4 class="amount earningAmountTotal"><span>$ </span>{totalEarnigs}</h4>
-                                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEarningModal">Add Earning</button>
+                        <div className="col-md-7">
+                            <div className="totalFigures">
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <div className="widgetBox totalBox earning">
+                                            <h4>Earnings for this month <i className="fa fa-arrow-up text-success"></i></h4>
+                                            <h4 className="amount earningAmountTotal"><span>$ </span>{totalEarnigs}</h4>
+                                            <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEarningModal">Add Earning</button>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="widgetBox totalBox spending">
-                                            <h4>Spending for this month <i class="fa fa-arrow-down text-danger"></i></h4>
-                                            <h4 class="amount spendAmountTotal"><span>$ </span>{totalAmount}</h4>
-                                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addExpenseModal">Add Spending</button>
+                                    <div className="col-md-6">
+                                        <div className="widgetBox totalBox spending">
+                                            <h4>Spending for this month <i className="fa fa-arrow-down text-danger"></i></h4>
+                                            <h4 className="amount spendAmountTotal"><span>$ </span>{totalAmount}</h4>
+                                            <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addExpenseModal">Add Spending</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="overview-tab" data-bs-toggle="pill" data-bs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="true">Overview</button>
+                    <ul className="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                        <li className="nav-item" role="presentation">
+                            <button className="nav-link active" id="overview-tab" data-bs-toggle="pill" data-bs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="true">Overview</button>
                         </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="books-tab" data-bs-toggle="pill" data-bs-target="#books" type="button" role="tab" aria-controls="books" aria-selected="false">My Books</button>
+                        <li className="nav-item" role="presentation">
+                            <button className="nav-link" id="books-tab" data-bs-toggle="pill" data-bs-target="#books" type="button" role="tab" aria-controls="books" aria-selected="false">Your Books</button>
                         </li>
                     </ul>
-                    <div class="tab-content" id="pills-tabContent">
-                        <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview">
-                            <HomeHistoryOverview historyData={historyData}/>
+                    <div className="tab-content" id="pills-tabContent">
+                        <div className="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview">
+                            <HomeHistoryOverview reFresh={reFresh} historyData={historyData}/>
                         </div>
-                        <div class="tab-pane fade" id="books" role="tabpanel" aria-labelledby="books">
-                            <HomeBookView reFresh={reFresh}/>
+                        <div className="tab-pane fade" id="books" role="tabpanel" aria-labelledby="books">
+                            <HomeBookView categories={categories} reFresh={reFresh} email={email}/>
                         </div>
                     </div>
                 </section>
                 </div>
-                <AddExpense reFresh={reFresh}  categories={categories} email={email} id={actionId} />
+                <AddExpense reFresh={reFresh}  categories={categories} email={email} />
             </div>
         </HomeContext.Provider>
     )
