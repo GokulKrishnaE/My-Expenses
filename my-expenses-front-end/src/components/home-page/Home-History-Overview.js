@@ -69,6 +69,10 @@ const HomeHistoryOverview = ({historyData,reFresh}) => {
         </div>
     }
 
+    const tableAmount = (rowData,column)=>{
+        return <span>₹ {rowData.amount}</span>
+    }
+
     function spendEarnToggle(e){
         if(e.target.checked){
             SetToggleSpendEarn('earn')
@@ -81,10 +85,10 @@ const HomeHistoryOverview = ({historyData,reFresh}) => {
     return (
         <>
         <div className="row">
-            <div className="col-lg-8">
+            <div className="col-lg-8 mb-4 mb-lg-0">
                 <div className="widgetBox widgetHistory mb-0">
                 <div className='d-md-flex justify-content-between align-items-center'>
-                <div className="d-sm-flex align-items-center">
+                <div className="d-flex align-items-center">
                 {toggleSpendEarn === 'spend' ? <h2 className="widgetTitle widgetTitle2">My Spendings</h2> : <h2 className="widgetTitle widgetTitle2">My Earnings</h2>}
                     <div className="toggleButton overviewToggle ms-sm-1">
                         <input type="checkbox" name="itemswitch" id="itemswitch" onChange={spendEarnToggle}/>
@@ -102,7 +106,7 @@ const HomeHistoryOverview = ({historyData,reFresh}) => {
                         <Column field="title" header="Title"></Column>
                         {toggleSpendEarn === 'spend' &&  <Column field="category" header="Category" filterField="category" dataType="text" filter></Column>} 
                         <Column field="date" header="Date"></Column>
-                        <Column field="amount" header="Amount"></Column>
+                        <Column header="Amount" body={tableAmount}></Column>
                         <Column body= {toggleSpendEarn === 'spend' ? deleteIconSpend : deleteIconEarn} >
                         </Column>
                         <Column body={<a href="#"><i className="fas fa-pen-to-square"></i></a>}></Column>
@@ -114,8 +118,8 @@ const HomeHistoryOverview = ({historyData,reFresh}) => {
             <div className="col-lg-4">
                 <div className="widgetBox h-100">
                     <div className='d-flex justify-content-between'>
-                    <h2 className="widgetTitle widgetTitle2">Breakdown</h2>
-                        <p role='button' className='fw-bold text-primary' data-bs-toggle="modal" data-bs-target="#compareModal">Compare<i className="fa-solid fa-repeat ms-2"></i></p>
+                        <h2 className="widgetTitle widgetTitle2">Breakdown</h2>
+                        {/* <p role='button' className='fw-bold text-primary' data-bs-toggle="modal" data-bs-target="#compareModal">Compare<i className="fa-solid fa-repeat ms-2"></i></p> */}
                     </div>
                     <div className="chartOuter overviewChart">
                         <div className="chartWrapper">
@@ -130,13 +134,13 @@ const HomeHistoryOverview = ({historyData,reFresh}) => {
                         ? legendArray.map((legends,index)=>{
                             return (<li key={index} className={`legend${index+1} d-flex justify-content-between align-items-center`}>
                             <p className="legendTitle">{legends.legend}</p>
-                            <p className="legendValue">{legends.value}</p>
+                            <p className="legendValue">₹ {legends.value}</p>
                             </li>)
                         })
                         : earnChartData.map((data,index)=>{
                             return (<li key={index} className={`legend${index+1} d-flex justify-content-between align-items-center`}>
                             <p className="legendTitle">{data.legend}</p>
-                            <p className="legendValue">{data.value}</p>
+                            <p className="legendValue">₹ {data.value}</p>
                             </li>)
                         })
                     }
@@ -144,7 +148,7 @@ const HomeHistoryOverview = ({historyData,reFresh}) => {
                 </div>
             </div>
         </div>
-        <Compare/>
+        {/* <Compare/> */}
       
         </>
     );

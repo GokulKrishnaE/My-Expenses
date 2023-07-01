@@ -1,6 +1,14 @@
 {
+  "name": "my-expenses",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "if-env TYPE=server && (cd api && npm install) || (cd my-expenses-front-end && npm install)",
+    "server": "node ./api/index.js",
+    "client": "cd my-expenses-front-end && npm start"
+  },
   "dependencies": {
-    "cookie-parser": "^1.4.6",
-    "uuid": "^9.0.0"
+    "if-env": "^1.0.4",
+    "nodemon": "^2.0.22"
   }
 }

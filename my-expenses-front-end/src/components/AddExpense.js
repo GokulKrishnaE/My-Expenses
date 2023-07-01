@@ -14,6 +14,7 @@ function AddExpense({email,categories,reFresh}){
   const books = homeContextData.books
   
   const [newCategory,setNewCategory] = useState({category: ''})
+  const [newBook,setBookName] = useState({bookName:'',totalearning:0,totalspending:0})
   const [newExpense, setNewExpense] = useState({
     email: email,
     title: '',
@@ -112,7 +113,31 @@ function AddExpense({email,categories,reFresh}){
     .then(res => {
         reFresh()
     })
-}
+  }
+
+  const addBook = async() =>{
+    console.log()
+        const url = `http://localhost:8800/api/books/addbook`
+        await axios.post(url,newBook,{
+          headers: {
+              Authorization: `Bearer ${token}`
+          },
+      })
+        .then(res => {
+            toast('item has been added',{
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                type: "success"
+              })
+              reFresh()
+        })
+  }
 
   const addExpense = async () =>{
     if(newExpense.title && newExpense.category && newExpense.date && newExpense.amount,newExpense.bookname){
@@ -144,7 +169,7 @@ function AddExpense({email,categories,reFresh}){
   }
   const addEarning = async () =>{
     if(newEarning.title && newEarning.date && newEarning.amount && newEarning.bookname){
-      document.querySelector('.errorMsg').classList.remove('active')
+      document.querySelector('.errorEarning').classList.remove('active')
       const url = `http://localhost:8800/api/addEarning/`
       await axios.post(url,newEarning,{
         headers: {
@@ -167,7 +192,7 @@ function AddExpense({email,categories,reFresh}){
       })
     }  
     else{
-      document.querySelector('.errorMsg').classList.add('active')
+      document.querySelector('.errorEarning').classList.add('active')
     }
   }
 
@@ -207,7 +232,20 @@ function AddExpense({email,categories,reFresh}){
                         </select>
                     </div>
                     <div className="form-group">
-                        <label className="label">Book</label>
+                        <div className="d-flex justify-content-between">
+                            <label className="label">Book</label>
+                            <a href="#" data-bs-toggle="collapse" data-bs-target="#addBookForm"><i className="fas fa-plus"></i> Add new Book</a>
+                        </div>
+                        <div className="form-group collapse" id="addBookForm">
+                          <div className="row">
+                            <div className="col-7">
+                              <input type="text" value={newBook.bookName} onChange={(e)=>setBookName({...newBook,bookName:e.target.value})} className="form-control"/>
+                            </div>
+                            <div className="col-5">
+                              <button className="btn btn-primary" onClick={addBook}><i className="fas fa-plus"></i></button>
+                            </div>
+                          </div>
+                        </div>
                         <select name="bookname" className="form-select" value={newExpense.bookname}  onChange={handleAdd}>
                           {books.map((book,index)=>{
                             return <option key={index}>{book.bookname}</option>
@@ -245,8 +283,21 @@ function AddExpense({email,categories,reFresh}){
                     <input type="text" className="form-control" name="title" value={newEarning.title} onChange={handleEarning}/>
                 </div>
                 <div className="form-group">
-                        <label className="label">Book</label>
-                        <select name="bookname" className="form-select" value={newEarning.bookname}  onChange={handleEarning}>
+                        <div className="d-flex justify-content-between">
+                            <label className="label">Book</label>
+                            <a href="#" data-bs-toggle="collapse" data-bs-target="#addBookForm"><i className="fas fa-plus"></i> Add new Book</a>
+                        </div>
+                        <div className="form-group collapse" id="addBookForm">
+                          <div className="row">
+                            <div className="col-7">
+                              <input type="text" value={newBook.bookName} onChange={(e)=>setBookName({...newBook,bookName:e.target.value})} className="form-control"/>
+                            </div>
+                            <div className="col-5">
+                              <button className="btn btn-primary" onClick={addBook}><i className="fas fa-plus"></i></button>
+                            </div>
+                          </div>
+                        </div>
+                        <select name="bookname" className="form-select" value={newExpense.bookname}  onChange={handleAdd}>
                           {books.map((book,index)=>{
                             return <option key={index}>{book.bookname}</option>
                           })}
@@ -261,7 +312,7 @@ function AddExpense({email,categories,reFresh}){
                     <label className="label">Amount</label>
                     <input type="number" name="amount" className="form-control" value={newEarning.amount} onChange={handleEarning}/>
                 </div>
-                <p className="errorMsg">Fields can't be empty</p>
+                <p className="errorMsg errorEarning">Fields can't be empty</p>
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

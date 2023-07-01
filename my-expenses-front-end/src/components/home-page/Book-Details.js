@@ -8,7 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Calendar } from 'primereact/calendar';
 
-const BookDetails = () => {
+const BookDetails = ({setHomeViewMode}) => {
 
     const navigate = useNavigate()
 
@@ -208,24 +208,31 @@ const BookDetails = () => {
     },[reFresh])
 
     function goHome(){
-        navigate('/home')
+        setHomeViewMode('books')
+        navigate('/home',{state:{mode:'books'}})
     }
 
+    const getSpendAmount = (rowData,column)=>{
+        return <span>₹ {rowData.amount}</span>
+    }
+    const getEarnAmount = (rowData,column)=>{
+        return <span>₹ {rowData.amount}</span>
+    }
 
     return (
         <div>
            <div className='wrapper'>
             <div className='contentArea'>
-                <div className="sectionTopArea">
+                <div className="sectionTopArea mb-4">
                     <div className="d-flex justify-content-between align-items-center">
                         <h2 className="sectionHeading">{bookname}</h2>
-                        <a role='button' className='text-primary' onClick={goHome}>Go to home</a>
+                        <a role='button' className='text-primary' onClick={goHome}>Go to Your Books</a>
                     </div>
                 </div>
                 <div className='widgetBox'>
-                    <div className='d-flex justify-content-between'>
-                        <h2 className='widgetTitle widgetTitle2'>Spending</h2>
-                        <button className='btn btn-primary' data-bs-toggle="modal" data-bs-target="#addExpenseBookModal">Add Spending</button>
+                    <div className='d-flex justify-content-between mb-3'>
+                        <h2 className='widgetTitle widgetTitle2 mb-0'>Spending</h2>
+                        <button className='btn btn-primary plusButton' data-bs-toggle="modal" data-bs-target="#addExpenseBookModal"><i className='fas fa-plus'></i></button>
                     </div>
                     <div className='row'>
                         <div className='col-md-6'>
@@ -234,7 +241,7 @@ const BookDetails = () => {
                             <Column field="title" header="Title"></Column>
                             <Column field="category" header="Category" filterField="category" dataType="text" filter></Column>
                             <Column field="date" header="Date"></Column>
-                            <Column field="amount" header="Amount"></Column>
+                            <Column body={getSpendAmount} header="Amount"></Column>
                             {/* <Column body= {toggleSpendEarn === 'spend' ? deleteIconSpend : deleteIconEarn} >
                             </Column> */}
                             <Column body={<a href="#"><i className="fas fa-pen-to-square"></i></a>}></Column>
@@ -255,7 +262,7 @@ const BookDetails = () => {
                                     spendingCategoriesArray.map((data,index)=>{
                                         return (<li key={index} className={`legend${index+1} d-flex justify-content-between align-items-center`}>
                                         <p className="legendTitle">{data.categoryName}</p>
-                                        <p className="legendValue">{data.value}</p>
+                                        <p className="legendValue">₹ {data.value}</p>
                                         </li>)
                                     })
                                 }
@@ -265,9 +272,9 @@ const BookDetails = () => {
                     </div>
                 </div>
                 <div className='widgetBox'>
-                    <div className='d-flex justify-content-between'>
-                        <h2 className='widgetTitle widgetTitle2'>Earnings</h2>
-                        <button className='btn btn-primary' data-bs-toggle="modal" data-bs-target="#addEarningBookModal">Add Earning</button>
+                    <div className='d-flex justify-content-between mb-3'>
+                        <h2 className='widgetTitle widgetTitle2 mb-0'>Earnings</h2>
+                        <button className='btn btn-primary plusButton' data-bs-toggle="modal" data-bs-target="#addEarningBookModal"><i className='fas fa-plus'></i></button>
                     </div>
                     <div className='row'>
                         <div className='col-md-6'>
@@ -276,7 +283,7 @@ const BookDetails = () => {
                             <Column field="title" header="Title"></Column>
                             {/* <Column field="category" header="Category" filterField="category" dataType="text" filter></Column> */}
                             <Column field="date" header="Date"></Column>
-                            <Column field="amount" header="Amount"></Column>
+                            <Column body={getEarnAmount} header="Amount"></Column>
                             {/* <Column body= {toggleSpendEarn === 'spend' ? deleteIconSpend : deleteIconEarn} >
                             </Column> */}
                             <Column body={<a href="#"><i className="fas fa-pen-to-square"></i></a>}></Column>
@@ -297,7 +304,7 @@ const BookDetails = () => {
                                         earnChartData.map((data,index)=>{
                                             return (<li key={index} className={`legend${index+1} d-flex justify-content-between align-items-center`}>
                                             <p className="legendTitle">{data.legend}</p>
-                                            <p className="legendValue">{data.data}</p>
+                                            <p className="legendValue">₹ {data.data}</p>
                                             </li>)
                                         })
                                     }

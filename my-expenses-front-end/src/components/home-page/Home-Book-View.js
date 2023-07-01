@@ -17,16 +17,12 @@ const HomeBookView = (props) => {
 
     const navigate = useNavigate()
 
-    const [bookName,setBookName] = useState({bookName:'New Book',totalearning:0,totalspending:0})
-    const bookObject = {
-        bookName: bookName.bookName.replace(/\s+/g, ''),
-        totalearning:0,
-        totalspending:0
-    }
+    const [newBook,setBookName] = useState({bookName:'',totalearning:0,totalspending:0})
 
     const addBook = async() =>{
+        console.log(newBook)
             const url = `http://localhost:8800/api/books/addbook`
-            await axios.post(url,bookObject,{
+            await axios.post(url,newBook,{
               headers: {
                   Authorization: `Bearer ${token}`
               },
@@ -84,28 +80,33 @@ const HomeBookView = (props) => {
     }
     function openBookView(bookname){
         console.log(bookname)
-        navigate('/bookDetails', { state: { bookname:bookname,categories:categories,email:email } });
+        navigate('/bookDetails', { state: { bookname:bookname,categories:categories,email:email} });
     }
     return (
         <div>
             <div className='widgetBox'>
                 <div className='row'>
                     {books.map((book,index)=>{
-                        return(<div className='col-lg-3 mb-3 position-relative' key={index}>
+                        return(<div className="col-lg-3 mb-3 position-relative" key={index}>
                         <div role="button" onClick={()=>openBookView(book.bookname)}>
                             <div className='book'>
-                                <h2 className='bookTitle'>{book.bookname}</h2>
-                                <p>Total Earning: <span>{book.totalearning}</span></p>
-                                <p>Total Spending: <span>{book.totalspending}</span></p>
+                                <h2 className='wigetTitle widgetTitle2 viewMode'>{book.bookname}</h2>
                             </div>
                         </div>
-                        <i className='fas fa-pencil text-primary bookDeleteButton bookEditButton'></i>
-                        <i className='fas fa-trash-can text-danger bookDeleteButton' onClick={()=>deleteBook(book.id,book.bookname)}></i>
-                    </div>)
+                        <i className='fas fa-trash-can text-danger deleteBookIcon' onClick={()=>deleteBook(book.id)}></i>
+                        </div>)
                     })}
+                    <div className="col-lg-3 mb-3 position-relative">
+                        <div>
+                            <div className='book'>
+                                <input type='text' className='bookTitle' placeholder='Enter the book name' onChange={(e)=>setBookName({...newBook,bookName:e.target.value})}/>
+                                <button className='btn btn-primary saveBookBtn plusButton' onClick={addBook}><i className='fas fa-plus'></i></button>
+                            </div>
+                        </div>
+                        </div>
                 </div>
             </div>
-            <button className="addTrip" onClick={addBook}></button>
+            {/* <button className="addTrip" onClick={addBook}></button> */}
         </div>
     );
 }

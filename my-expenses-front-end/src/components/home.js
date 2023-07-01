@@ -4,14 +4,13 @@ import axios from "axios";
 import AddExpense from "./AddExpense";
 import HomeHistoryOverview from "./home-page/Home-History-Overview";
 import HomeBookView from "./home-page/Home-Book-View";
+import { useLocation } from "react-router-dom";
 
 // context for home components
 const HomeContext = createContext()
 
 
-function Home(){
-
-
+function Home({homeViewMode}){
     const token = sessionStorage.getItem('token')
     const email = sessionStorage.getItem('userEmail')
     const userName = sessionStorage.getItem('userName')
@@ -19,6 +18,8 @@ function Home(){
     const [categories,setCategories]= useState([])
     const [reLoad, setReload] = useState(false)
     const [isAuthenticated, setIsAuthenticated] = useState(false)
+    let viewMode = homeViewMode
+
     
     // spending data states
     const [expenseData,setExpenseData] = useState([])
@@ -43,6 +44,8 @@ function Home(){
         totalEarnigs: totalEarnigs,
         legendArray: legendArray,
     }
+
+    console.log('expesedata',expenseData)
 
     // home context data
     const homeContextData  = {
@@ -134,7 +137,7 @@ function Home(){
              <div className="wrapper">
                 <div className="contentArea">
                 <section className="homePage pageComponent" id="homePage">
-                    <div className="sectionTopArea">
+                    <div className="sectionTopArea d-none d-lg-block">
                         <div className="d-flex justify-content-between align-items-center">
                             <h2 className="sectionHeading">Dashboard</h2>
                         </div>
@@ -143,7 +146,7 @@ function Home(){
                         <div className="col-md-5">
                             <div className="welcomeWidget">
                                 <h3>Welcome {userName}!</h3>
-                                <p>Here is your overall details about your spending and earning. Click on the full details to view the detailed report.</p>
+                                
                             </div>
                         </div>
                         <div className="col-md-7">
@@ -151,16 +154,24 @@ function Home(){
                                 <div className="row">
                                     <div className="col-md-6">
                                         <div className="widgetBox totalBox earning">
-                                            <h4>Earnings for this month <i className="fa fa-arrow-up text-success"></i></h4>
-                                            <h4 className="amount earningAmountTotal"><span>$ </span>{totalEarnigs}</h4>
-                                            <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEarningModal">Add Earning</button>
+                                            <span className="totalBoxLeft">
+                                                <i className="fas fa-sack-dollar"></i>
+                                            </span>
+                                            <div className="d-flex justify-content-between align-items-center w-100">
+                                                <h4 className="amount earningAmountTotal mb-0"><span>₹ </span>{totalEarnigs}<i className="fas fa-arrow-up text-success ms-2 plusMinusIcon"></i></h4>
+                                                <button className="btn btn-outline-primary totalBoxAdd" data-bs-toggle="modal" data-bs-target="#addEarningModal"><i className="fas fa-plus"></i></button>
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="col-md-6">
                                         <div className="widgetBox totalBox spending">
-                                            <h4>Spending for this month <i className="fa fa-arrow-down text-danger"></i></h4>
-                                            <h4 className="amount spendAmountTotal"><span>$ </span>{totalAmount}</h4>
-                                            <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addExpenseModal">Add Spending</button>
+                                        <span className="totalBoxLeft">
+                                            <i className="fas fa-wallet"></i>
+                                        </span>
+                                            <div className="d-flex justify-content-between align-items-center w-100">
+                                                <h4 className="amount spendAmountTotal mb-0"><span>₹ </span>{totalAmount}<i className="fas fa-arrow-down text-danger ms-2 plusMinusIcon"></i></h4>
+                                                <button className="btn btn-outline-primary totalBoxAdd" data-bs-toggle="modal" data-bs-target="#addExpenseModal"><i className="fas fa-plus"></i></button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -169,17 +180,17 @@ function Home(){
                     </div>
                     <ul className="nav nav-pills mb-3" id="pills-tab" role="tablist">
                         <li className="nav-item" role="presentation">
-                            <button className="nav-link active" id="overview-tab" data-bs-toggle="pill" data-bs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="true">Overview</button>
+                            <button className={`nav-link ${viewMode == 'overview' ? 'active' : null}`} id="overview-tab" data-bs-toggle="pill" data-bs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="true"><i className="fas fa-chart-line me-2"></i>Overview</button>
                         </li>
                         <li className="nav-item" role="presentation">
-                            <button className="nav-link" id="books-tab" data-bs-toggle="pill" data-bs-target="#books" type="button" role="tab" aria-controls="books" aria-selected="false">Your Books</button>
+                            <button className={`nav-link ${viewMode == 'books' ? 'active' : null}`} id="books-tab" data-bs-toggle="pill" data-bs-target="#books" type="button" role="tab" aria-controls="books" aria-selected="false"><i className="fas fa-book me-2"></i>Your Books</button>
                         </li>
                     </ul>
                     <div className="tab-content" id="pills-tabContent">
-                        <div className="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview">
+                        <div className={`tab-pane fade show ${viewMode == 'overview' ? 'active' : null}`} id="overview" role="tabpanel" aria-labelledby="overview">
                             <HomeHistoryOverview reFresh={reFresh} historyData={historyData}/>
                         </div>
-                        <div className="tab-pane fade" id="books" role="tabpanel" aria-labelledby="books">
+                        <div className={`tab-pane fade ${viewMode == 'books' ? 'active show' : null}`} id="books" role="tabpanel" aria-labelledby="books">
                             <HomeBookView categories={categories} reFresh={reFresh} email={email}/>
                         </div>
                     </div>
