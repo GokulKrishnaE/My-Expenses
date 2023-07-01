@@ -45,8 +45,6 @@ function Home({homeViewMode}){
         legendArray: legendArray,
     }
 
-    console.log('expesedata',expenseData)
-
     // home context data
     const homeContextData  = {
     expenseData: expenseData,
@@ -72,6 +70,7 @@ function Home({homeViewMode}){
                     authorization: `Bearer ${token}`
                 },
             }).then(res => {
+                console.log(res)
                 setExpenseData(res.data.expenseData)
                 setCategoriesArray(res.data.categoriesArray)
                 setSpendChartData(res.data.SpendChartData)

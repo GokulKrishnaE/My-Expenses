@@ -20,7 +20,7 @@ function App() {
     { sessionStorage.getItem('isLogin') &&   
       <><div className="mobileTopNav">
       <h1 className="logo logoHeading mobile mb-0">My Expenses</h1>
-      <button className="hamburger" onClick={()=>setMobileMenuToggle(!mobileMenuToggle)}>{mobileMenuToggle ? <i className="fa fa-xmark"></i> : <i class="fas fa-bars"></i>}</button>
+      <button className="hamburger" onClick={()=>setMobileMenuToggle(!mobileMenuToggle)}>{mobileMenuToggle ? <i className="fa fa-xmark"></i> : <i className="fas fa-bars"></i>}</button>
       </div>    
       <div className={`sideNav navigation ${mobileMenuToggle ? 'active' : ''}`}>
         <h1 className="logo logoHeading">My Expenses</h1>

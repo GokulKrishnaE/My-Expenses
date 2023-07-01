@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "build": "if-env TYPE=server && (cd api && npm install) || (cd my-expenses-front-end && npm install)",
-    "server": "node ./api/index.js",
+    "server": "nodemon ./api/index.js",
     "client": "cd my-expenses-front-end && npm start"
   },
   "dependencies": {

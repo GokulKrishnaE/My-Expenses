@@ -5,7 +5,6 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import {FilterMatchMode,FilterOperator } from 'primereact/api'
 import DoughnutChart from './Doughnut-chart';
-import Compare from './Compare';
 
 
 
@@ -23,6 +22,8 @@ const HomeHistoryOverview = ({historyData,reFresh}) => {
     earnChartData.forEach(data=>{
         earnChartDataValues.push(data.data)
     })
+
+    console.log(homeContextData)
 
     // taking data from context
     const expenseData = homeContextData.expenseData
@@ -148,7 +149,6 @@ const HomeHistoryOverview = ({historyData,reFresh}) => {
                 </div>
             </div>
         </div>
-        {/* <Compare/> */}
       
         </>
     );
