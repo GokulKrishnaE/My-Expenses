@@ -42,6 +42,7 @@ function AddExpense({email,categories,reFresh}){
                   Authorization: `Bearer ${token}`
               },
           }).then(res => {
+            console.log(res.data)
             setNewExpense({
               ...newExpense,
               bookname:res.data.firstbookName
@@ -116,7 +117,6 @@ function AddExpense({email,categories,reFresh}){
   }
 
   const addBook = async() =>{
-    console.log()
         const url = `http://localhost:8800/api/books/addbook`
         await axios.post(url,newBook,{
           headers: {
@@ -297,7 +297,7 @@ function AddExpense({email,categories,reFresh}){
                             </div>
                           </div>
                         </div>
-                        <select name="bookname" className="form-select" value={newExpense.bookname}  onChange={handleAdd}>
+                        <select name="bookname" className="form-select" value={newEarning.bookname}  onChange={handleEarning}>
                           {books.map((book,index)=>{
                             return <option key={index}>{book.bookname}</option>
                           })}

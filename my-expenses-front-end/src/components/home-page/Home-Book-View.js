@@ -20,7 +20,6 @@ const HomeBookView = (props) => {
     const [newBook,setBookName] = useState({bookName:'',totalearning:0,totalspending:0})
 
     const addBook = async() =>{
-        console.log(newBook)
             const url = `http://localhost:8800/api/books/addbook`
             await axios.post(url,newBook,{
               headers: {
@@ -49,14 +48,12 @@ const HomeBookView = (props) => {
                 Authorization: `Bearer ${token}`
             },
         }).then(res=>{
-            console.log('fromt delete expense')
             axios.delete(`http://localhost:8800/api/books/deleteExpense/${currentBookname}`,{
             headers: {
                 Authorization: `Bearer ${token}`
             },
             })
         }).then(res=>{
-            console.log('fromt delete earnng')
             axios.delete(`http://localhost:8800/api/books/deleteEarning/${currentBookname}`,{
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -79,7 +76,6 @@ const HomeBookView = (props) => {
         
     }
     function openBookView(bookname){
-        console.log(bookname)
         navigate('/bookDetails', { state: { bookname:bookname,categories:categories,email:email} });
     }
     return (
@@ -93,7 +89,7 @@ const HomeBookView = (props) => {
                                 <h2 className='wigetTitle widgetTitle2 viewMode'>{book.bookname}</h2>
                             </div>
                         </div>
-                        <i className='fas fa-trash-can text-danger deleteBookIcon' onClick={()=>deleteBook(book.id)}></i>
+                        <i className='fas fa-trash-can text-danger deleteBookIcon' onClick={()=>deleteBook(book.id,book.bookname)}></i>
                         </div>)
                     })}
                     <div className="col-lg-3 mb-3 position-relative">

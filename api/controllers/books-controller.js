@@ -21,7 +21,13 @@ export const getBooks = async (req,res) =>{
     try{
         const data = await pool.query(`SELECT * FROM BOOKS WHERE EMAIL = '${userEmail}'
         `)
-        const booksData = {books:data.rows, firstbookName:data.rows[0].bookname}
+        let booksData = {}
+        if(data.rows.length){
+            booksData = {books:data.rows, firstbookName:data.rows[0].bookname}
+        }
+        else{
+            booksData = {books:data.rows}
+        }
         res.json(booksData)
     }
     catch(err){

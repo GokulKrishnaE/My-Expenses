@@ -37,8 +37,6 @@ const BookDetails = ({setHomeViewMode}) => {
          earnChartDataValues.push(data.data)
      })
 
-     console.log(bookname,reFresh,categories,email)
-
      const [newCategory,setNewCategory] = useState({category: ''})
      const [newExpense, setNewExpense] = useState({
         email: email,
@@ -151,6 +149,7 @@ const BookDetails = ({setHomeViewMode}) => {
       }
       const addEarning = async () =>{
         if(newEarning.title && newEarning.date && newEarning.amount && newEarning.bookname){
+            console.log(newEarning)
           document.querySelector('.errorMsg').classList.remove('active')
           const url = `http://localhost:8800/api/addEarning/`
           await axios.post(url,newEarning,{
@@ -200,12 +199,56 @@ const BookDetails = ({setHomeViewMode}) => {
                     authorization: `Bearer ${token}`
                 },
             }).then(res => {
+                console.log(res.data)
                 setEarningsData(res.data.earningsData)
                 setEarnChartData(res.data.earnChartData)
                 setTotalEarning(res.data.totalEarnigs)
             })
         }
     },[reFresh])
+
+    const deleteItem = (id) =>{
+        axios.delete(`http://localhost:8800/api/deleteExpense/${id}`,{
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        })
+        .then(res =>{
+            toast('item has been deleted',{
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            type: "success"
+          })
+          })
+          setReFresh(!reFresh)
+    }
+    const deleteItemEarn = (id) =>{
+        axios.delete(`http://localhost:8800/api/deleteEarning/${id}`,{
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        })
+        .then(res =>{
+            toast('item has been deleted',{
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                type: "success"
+              })
+        })
+        setReFresh(!reFresh)
+    }
 
     function goHome(){
         setHomeViewMode('books')
@@ -217,6 +260,12 @@ const BookDetails = ({setHomeViewMode}) => {
     }
     const getEarnAmount = (rowData,column)=>{
         return <span>₹ {rowData.amount}</span>
+    }
+    const deleteSpend = (rowData,column)=>{
+        return <a href="javascript:void(0)" onClick={()=>deleteItem(rowData.id)}><i className="fas fa-trash-can text-danger"></i></a>
+    }
+    const deleteEarn = (rowData,column)=>{
+        return <a href="javascript:void(0)" onClick={()=>deleteItemEarn(rowData.id)}><i className="fas fa-trash-can text-danger"></i></a>
     }
 
     return (
@@ -244,7 +293,7 @@ const BookDetails = ({setHomeViewMode}) => {
                             <Column body={getSpendAmount} header="Amount"></Column>
                             {/* <Column body= {toggleSpendEarn === 'spend' ? deleteIconSpend : deleteIconEarn} >
                             </Column> */}
-                            <Column body={<a href="#"><i className="fas fa-pen-to-square"></i></a>}></Column>
+                            <Column body={deleteSpend}></Column>
                         </DataTable>
                     </div>
                         </div>
@@ -286,7 +335,7 @@ const BookDetails = ({setHomeViewMode}) => {
                             <Column body={getEarnAmount} header="Amount"></Column>
                             {/* <Column body= {toggleSpendEarn === 'spend' ? deleteIconSpend : deleteIconEarn} >
                             </Column> */}
-                            <Column body={<a href="#"><i className="fas fa-pen-to-square"></i></a>}></Column>
+                            <Column body={deleteEarn}></Column>
                         </DataTable>
                     </div>
                         </div>

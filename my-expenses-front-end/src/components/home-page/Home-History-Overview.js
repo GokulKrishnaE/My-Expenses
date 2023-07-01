@@ -5,6 +5,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import {FilterMatchMode,FilterOperator } from 'primereact/api'
 import DoughnutChart from './Doughnut-chart';
+import { ToastContainer, toast } from 'react-toastify';
 
 
 
@@ -23,7 +24,6 @@ const HomeHistoryOverview = ({historyData,reFresh}) => {
         earnChartDataValues.push(data.data)
     })
 
-    console.log(homeContextData)
 
     // taking data from context
     const expenseData = homeContextData.expenseData
@@ -46,7 +46,20 @@ const HomeHistoryOverview = ({historyData,reFresh}) => {
                 Authorization: `Bearer ${token}`
             },
         })
-        .then(res =>{})
+        .then(res =>{
+            toast('item has been deleted',{
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                type: "success"
+              })
+              reFresh()
+        })
         reFresh()
     }
     const deleteItemEarn = (id) =>{
@@ -55,7 +68,20 @@ const HomeHistoryOverview = ({historyData,reFresh}) => {
                 Authorization: `Bearer ${token}`
             },
         })
-        .then(res =>{})
+        .then(res =>{
+            toast('item has been deleted',{
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                type: "success"
+              })
+              reFresh()
+        })
         reFresh()
     }
 
