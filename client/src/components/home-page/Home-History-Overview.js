@@ -41,7 +41,7 @@ const HomeHistoryOverview = ({historyData,reFresh}) => {
 
     // delete item from table
     const deleteItem = (id) =>{
-        axios.delete(`http://localhost:8800/api/deleteExpense/${id}`,{
+        axios.delete(`${process.env.REACT_APP_SERVERURL}/api/deleteExpense/${id}`,{
             headers: {
                 Authorization: `Bearer ${token}`
             },
@@ -63,7 +63,7 @@ const HomeHistoryOverview = ({historyData,reFresh}) => {
         reFresh()
     }
     const deleteItemEarn = (id) =>{
-        axios.delete(`http://localhost:8800/api/deleteEarning/${id}`,{
+        axios.delete(`${process.env.REACT_APP_SERVERURL}/api/deleteEarning/${id}`,{
             headers: {
                 Authorization: `Bearer ${token}`
             },

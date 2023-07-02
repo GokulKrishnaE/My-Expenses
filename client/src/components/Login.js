@@ -19,7 +19,7 @@ function Login(){
           });
     }
     function login(){
-        axios.post('http://localhost:8800/api/login',user).then(res => {
+        axios.post(`${process.env.REACT_APP_SERVERURL}/api/login`,user).then(res => {
         if(res.data.token){
             document.querySelector('.errorMsg').classList.remove('active')
             sessionStorage.setItem('token',res.data.token)

@@ -65,7 +65,7 @@ function Home({homeViewMode}){
     useEffect(()=>{
         if(token){
             setIsAuthenticated(true)
-            axios.get(`http://localhost:8800/api/`,{
+            axios.get(`${process.env.REACT_APP_SERVERURL}/api/`,{
                 headers: {
                     authorization: `Bearer ${token}`
                 },
@@ -81,7 +81,7 @@ function Home({homeViewMode}){
     },[reLoad])
     useEffect(()=>{
         if(token){
-            axios.get(`http://localhost:8800/api/categories/`,{
+            axios.get(`${process.env.REACT_APP_SERVERURL}/api/categories/`,{
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -92,7 +92,7 @@ function Home({homeViewMode}){
     },[reLoad])
     useEffect(()=>{
         if(token){
-            axios.get(`http://localhost:8800/api/getEarnigs/`,{
+            axios.get(`${process.env.REACT_APP_SERVERURL}/api/getEarnigs/`,{
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -105,7 +105,7 @@ function Home({homeViewMode}){
     },[reLoad])
     useEffect(()=>{
         if(token){
-            axios.get(`http://localhost:8800/api/books/getBooks/`,{
+            axios.get(`${process.env.REACT_APP_SERVERURL}/api/books/getBooks/`,{
                 headers: {
                     Authorization: `Bearer ${token}`
                 },

@@ -1,4 +1,4 @@
-GET http://localhost:8800/api/trips
+GET ${process.env.REACT_APP_SERVERURL}/api/trips
 ###
 POST https://localhost:8800/api/trips/
 Content-Type: application/json

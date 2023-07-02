@@ -39,7 +39,7 @@ const Compare = () => {
 
     useEffect(()=>{
         if(token){
-            axios.post(`http://localhost:8800/api/compare`,leftData,{
+            axios.post(`${process.env.REACT_APP_SERVERURL}/api/compare`,leftData,{
                 headers: {
                     authorization: `Bearer ${token}`
                 },
@@ -50,7 +50,7 @@ const Compare = () => {
     },[leftMonth,leftYear])
     useEffect(()=>{
         if(token){
-            axios.post(`http://localhost:8800/api/compare`,rightData,{
+            axios.post(`${process.env.REACT_APP_SERVERURL}/api/compare`,rightData,{
                 headers: {
                     authorization: `Bearer ${token}`
                 },

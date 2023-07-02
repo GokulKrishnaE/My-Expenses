@@ -108,7 +108,7 @@ const BookDetails = ({setHomeViewMode}) => {
       }
     
       const addNewCategory = async () =>{
-        const url = `http://localhost:8800/api/categories/add/`
+        const url = `${process.env.REACT_APP_SERVERURL}/api/categories/add/`
         await axios.post(url,newCategory,{
           headers: {
               Authorization: `Bearer ${token}`
@@ -122,7 +122,7 @@ const BookDetails = ({setHomeViewMode}) => {
       const addExpense = async () =>{
         if(newExpense.title && newExpense.category && newExpense.date && newExpense.amount,newExpense.bookname){
           document.querySelector('.errorMsg').classList.remove('active')
-          const url = `http://localhost:8800/api/addExpense/`
+          const url = `${process.env.REACT_APP_SERVERURL}/api/addExpense/`
           await axios.post(url,newExpense,{
             headers: {
                 Authorization: `Bearer ${token}`
@@ -151,7 +151,7 @@ const BookDetails = ({setHomeViewMode}) => {
         if(newEarning.title && newEarning.date && newEarning.amount && newEarning.bookname){
             console.log(newEarning)
           document.querySelector('.errorMsg').classList.remove('active')
-          const url = `http://localhost:8800/api/addEarning/`
+          const url = `${process.env.REACT_APP_SERVERURL}/api/addEarning/`
           await axios.post(url,newEarning,{
             headers: {
                 Authorization: `Bearer ${token}`
@@ -180,7 +180,7 @@ const BookDetails = ({setHomeViewMode}) => {
 
     useEffect(()=>{
         if(token){
-            axios.post(`http://localhost:8800/api/books/getBookDetails/spending`,{bookname:bookname},{
+            axios.post(`${process.env.REACT_APP_SERVERURL}/api/books/getBookDetails/spending`,{bookname:bookname},{
                 headers: {
                     authorization: `Bearer ${token}`
                 },
@@ -194,7 +194,7 @@ const BookDetails = ({setHomeViewMode}) => {
     },[reFresh])
     useEffect(()=>{
         if(token){
-            axios.post(`http://localhost:8800/api/books/getBookDetails/earning`,{bookname:bookname},{
+            axios.post(`${process.env.REACT_APP_SERVERURL}/api/books/getBookDetails/earning`,{bookname:bookname},{
                 headers: {
                     authorization: `Bearer ${token}`
                 },
@@ -208,7 +208,7 @@ const BookDetails = ({setHomeViewMode}) => {
     },[reFresh])
 
     const deleteItem = (id) =>{
-        axios.delete(`http://localhost:8800/api/deleteExpense/${id}`,{
+        axios.delete(`${process.env.REACT_APP_SERVERURL}/api/deleteExpense/${id}`,{
             headers: {
                 Authorization: `Bearer ${token}`
             },
@@ -229,7 +229,7 @@ const BookDetails = ({setHomeViewMode}) => {
           setReFresh(!reFresh)
     }
     const deleteItemEarn = (id) =>{
-        axios.delete(`http://localhost:8800/api/deleteEarning/${id}`,{
+        axios.delete(`${process.env.REACT_APP_SERVERURL}/api/deleteEarning/${id}`,{
             headers: {
                 Authorization: `Bearer ${token}`
             },

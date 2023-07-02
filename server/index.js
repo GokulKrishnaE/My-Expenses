@@ -9,6 +9,7 @@ import { addCategory, getCategories } from './controllers/categories-controller.
 import { verifyToken, verifyTokenEmail } from './verification/verify.js'
 import { addBook,deleteBook,deleteEarningBook,deleteExpenseBook,getBookDetails,getBookDetailsEarning,getBooks } from './controllers/books-controller.js'
 
+const PORT = process.env.PORT ?? 8800
 const app = express()
 dotenv.config()
 
@@ -37,6 +38,6 @@ app.delete('/api/books/deleteExpense/:currentBookname',verifyTokenEmail,deleteEx
 app.delete('/api/books/deleteEarning/:currentBookname',verifyTokenEmail,deleteEarningBook)
 
 
-app.listen('8800',()=>{
-    console.log('runnning on 8800')
+app.listen(PORT,()=>{
+    console.log(`runnning on ${PORT}`)
 })

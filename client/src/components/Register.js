@@ -24,11 +24,11 @@ const Register = () => {
     const register = async () =>{
         if(newUser.email && newUser.username && newUser.password){
             document.querySelector('.errorMsg').classList.remove('active')
-            const url = 'http://localhost:8800/api/register'
+            const url = `${process.env.REACT_APP_SERVERURL}/api/register`
             await axios.post(url,newUser)
             .then(res => {
                 if(res.data.status){
-                    axios.post(`http://localhost:8800/api/categories/create/${newUser.email}`)
+                    axios.post(`${process.env.REACT_APP_SERVERURL}/api/categories/create/${newUser.email}`)
                     .then(res => {
                         localStorage.setItem('categoryadded',true)
                     })

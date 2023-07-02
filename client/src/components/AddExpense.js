@@ -37,7 +37,7 @@ function AddExpense({email,categories,reFresh}){
 
   useEffect(()=>{
       if(token){
-          axios.get(`http://localhost:8800/api/books/getBooks/`,{
+          axios.get(`${process.env.REACT_APP_SERVERURL}/api/books/getBooks/`,{
               headers: {
                   Authorization: `Bearer ${token}`
               },
@@ -105,7 +105,7 @@ function AddExpense({email,categories,reFresh}){
   }
 
   const addNewCategory = async () =>{
-    const url = `http://localhost:8800/api/categories/add/`
+    const url = `${process.env.REACT_APP_SERVERURL}/api/categories/add/`
     await axios.post(url,newCategory,{
       headers: {
           Authorization: `Bearer ${token}`
@@ -117,7 +117,7 @@ function AddExpense({email,categories,reFresh}){
   }
 
   const addBook = async() =>{
-        const url = `http://localhost:8800/api/books/addbook`
+        const url = `${process.env.REACT_APP_SERVERURL}/api/books/addbook`
         await axios.post(url,newBook,{
           headers: {
               Authorization: `Bearer ${token}`
@@ -142,7 +142,7 @@ function AddExpense({email,categories,reFresh}){
   const addExpense = async () =>{
     if(newExpense.title && newExpense.category && newExpense.date && newExpense.amount,newExpense.bookname){
       document.querySelector('.errorMsg').classList.remove('active')
-      const url = `http://localhost:8800/api/addExpense/`
+      const url = `${process.env.REACT_APP_SERVERURL}/api/addExpense/`
       await axios.post(url,newExpense,{
         headers: {
             Authorization: `Bearer ${token}`
@@ -170,7 +170,7 @@ function AddExpense({email,categories,reFresh}){
   const addEarning = async () =>{
     if(newEarning.title && newEarning.date && newEarning.amount && newEarning.bookname){
       document.querySelector('.errorEarning').classList.remove('active')
-      const url = `http://localhost:8800/api/addEarning/`
+      const url = `${process.env.REACT_APP_SERVERURL}/api/addEarning/`
       await axios.post(url,newEarning,{
         headers: {
             Authorization: `Bearer ${token}`

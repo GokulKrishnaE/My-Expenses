@@ -20,7 +20,7 @@ const HomeBookView = (props) => {
     const [newBook,setBookName] = useState({bookName:'',totalearning:0,totalspending:0})
 
     const addBook = async() =>{
-            const url = `http://localhost:8800/api/books/addbook`
+            const url = `${process.env.REACT_APP_SERVERURL}/api/books/addbook`
             await axios.post(url,newBook,{
               headers: {
                   Authorization: `Bearer ${token}`
@@ -43,18 +43,18 @@ const HomeBookView = (props) => {
     }
     const deleteBook = async (id,bookname) =>{
         const currentBookname = bookname
-        axios.delete(`http://localhost:8800/api/books/deleteBook/${id}`,{
+        axios.delete(`${process.env.REACT_APP_SERVERURL}/api/books/deleteBook/${id}`,{
             headers: {
                 Authorization: `Bearer ${token}`
             },
         }).then(res=>{
-            axios.delete(`http://localhost:8800/api/books/deleteExpense/${currentBookname}`,{
+            axios.delete(`${process.env.REACT_APP_SERVERURL}/api/books/deleteExpense/${currentBookname}`,{
             headers: {
                 Authorization: `Bearer ${token}`
             },
             })
         }).then(res=>{
-            axios.delete(`http://localhost:8800/api/books/deleteEarning/${currentBookname}`,{
+            axios.delete(`${process.env.REACT_APP_SERVERURL}/api/books/deleteEarning/${currentBookname}`,{
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
