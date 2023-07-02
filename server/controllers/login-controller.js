@@ -19,6 +19,6 @@ export const login = async (req,res) =>{
         }
     }
     catch(err){
-        console.error(err)
+        res.send({error: 'Something went wrong'})
     }
 }
