@@ -14,7 +14,7 @@ const app = express()
 dotenv.config()
 
 
-app.use(cors({origin: 'https://my-expenses-client.vercel.app'}))
+app.use(cors({origin: 'https://my-expenses-client-rmnfb13bk-gokulkrishnae.vercel.app'}))
 app.use(cookieParser())
 app.use(express.json())
 
