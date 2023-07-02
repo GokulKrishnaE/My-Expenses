@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "if-env TYPE=server && (cd api && npm install) || (cd my-expenses-front-end && npm install)",
-    "server": "nodemon ./api/index.js",
-    "client": "cd my-expenses-front-end && npm start"
+    "build": "if-env TYPE=server && (cd server && npm install) || (cd client && npm install)",
+    "server": "nodemon ./server/index.js",
+    "client": "cd client && npm start"
   },
   "dependencies": {
     "if-env": "^1.0.4",
