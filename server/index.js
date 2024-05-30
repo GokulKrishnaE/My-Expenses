@@ -15,7 +15,7 @@ dotenv.config()
 
 
 const corsOptions = {
-    origin: 'https://my-expenses-client.vercel.app',
+    origin: 'http://localhost:8800',
     methods: ["GET","POST","PUT","DELETE","OPTIONS"],
 }
 
