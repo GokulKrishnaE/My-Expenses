@@ -9,7 +9,7 @@ export const getAllData = async (req,res) =>{
     let totalAmount = 0
     const userEmail = req.email
     try{
-        const data = await pool.query(`SELECT * FROM EXPENSES WHERE EMAIL = '${userEmail}'
+        const data = await pool.query(`SELECT * FROM "EXPENSES" WHERE EMAIL = '${userEmail}'
         `)
         const expenseData = data.rows
         expenseData.forEach((expense)=>{
@@ -46,7 +46,7 @@ export const getAllEarnings = async (req,res) =>{
     let totalEarnigs = 0
     const userEmail = req.email
     try{
-        const data = await pool.query(`SELECT * FROM EARNINGS WHERE EMAIL = '${userEmail}'
+        const data = await pool.query(`SELECT * FROM "EARNINGS" WHERE EMAIL = '${userEmail}'
         `)
         const earningsData = data.rows
         earningsData.forEach(earning =>{
@@ -77,7 +77,7 @@ export const addExpense = async (req,res) =>{
     const year = req.body.year
     const bookname = req.body.bookname
     try{
-        const data = await pool.query(`INSERT INTO EXPENSES(id,email,title,category,date,amount,month,year,bookname) VALUES('${id}','${userEmail}','${title}','${category}','${date}','${amount}','${month}','${year}','${bookname}')`)
+        const data = await pool.query(`INSERT INTO "EXPENSES"(id,email,title,category,date,amount,month,year,bookname) VALUES('${id}','${userEmail}','${title}','${category}','${date}','${amount}','${month}','${year}','${bookname}')`)
         res.json(data.rows)
     }
     catch(err){
@@ -95,7 +95,7 @@ export const addEarning = async (req,res) =>{
     const year = req.body.year
     const bookname = req.body.bookname
     try{
-        const data = await pool.query(`INSERT INTO EARNINGS(id,email,title,date,month,year,amount,bookname) VALUES('${id}','${userEmail}','${title}','${date}','${month}','${year}','${amount}','${bookname}')`)
+        const data = await pool.query(`INSERT INTO "EARNINGS"(id,email,title,date,month,year,amount,bookname) VALUES('${id}','${userEmail}','${title}','${date}','${month}','${year}','${amount}','${bookname}')`)
         res.json(data.rows)
     }
     catch(err){
@@ -106,7 +106,7 @@ export const addEarning = async (req,res) =>{
 export const deleteExpense = async (req,res) =>{
     const id = req.params.id
     try{
-        const data = await pool.query(`DELETE FROM EXPENSES WHERE id = '${id}'`)
+        const data = await pool.query(`DELETE FROM "EXPENSES" WHERE id = '${id}'`)
         res.json({data:data.rows,status:true, details:'deleted'})
     }
     catch(err){
@@ -116,7 +116,7 @@ export const deleteExpense = async (req,res) =>{
 export const deleteEarning = async (req,res) =>{
     const id = req.params.id
     try{
-        const data = await pool.query(`DELETE FROM EARNINGS WHERE id = '${id}'`)
+        const data = await pool.query(`DELETE FROM "EARNINGS" WHERE id = '${id}'`)
         res.json({data:data.rows,status:true, details:'deleted'})
     }
     catch(err){
@@ -132,7 +132,7 @@ export const getCompareData = async (req,res) =>{
     const month = req.body.month
     const year = req.body.year
     try{
-        const data = await pool.query(`SELECT * FROM EXPENSES WHERE EMAIL = '${userEmail}' and MONTH = '${month}' and YEAR = '${year}'
+        const data = await pool.query(`SELECT * FROM "EXPENSES" WHERE EMAIL = '${userEmail}' and MONTH = '${month}' and YEAR = '${year}'
         `)
         res.json(data.rows)
     }

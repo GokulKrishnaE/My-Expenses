@@ -5,8 +5,9 @@ import Jwt from 'jsonwebtoken'
 export const login = async (req,res) =>{
     const username = req.body.username
     const password = req.body.password
+    console.log('test')
     try{
-        const data = await pool.query(`SELECT * FROM USERS WHERE USERNAME = '${username}' and PASSWORD = '${password}'`)
+        const data = await pool.query(`SELECT * FROM "USERS" WHERE USERNAME = '${username}' and PASSWORD = '${password}'`)
         if(data.rowCount !=0){
             const user = data.rows
             const payload = {email:user[0].email}

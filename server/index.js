@@ -14,11 +14,11 @@ const app = express()
 dotenv.config()
 
 
-app.use(cors({origin: ['https://my-expenses-client-rmnfb13bk-gokulkrishnae.vercel.app','https://my-expenses-client.vercel.app','*']}))
+app.use(cors({origin: '*'}))
 app.use(cookieParser())
 app.use(express.json())
 
-app.get('/api/',verifyTokenEmail,getAllData)
+app.get('/api/',getAllData)
 app.post('/api/compare/',verifyTokenEmail,getCompareData)
 app.get('/api/getEarnigs/',verifyTokenEmail,getAllEarnings)
 app.get('/api/categories/',verifyTokenEmail,getCategories)

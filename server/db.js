@@ -2,7 +2,7 @@ import pg from 'pg'
 const Pool = pg.Pool
 
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL || 'postgresql://postgres:Predator4@@@localhost:5432/postgres',
+    connectionString: 'postgres://postgres.tzaevhasduaearrziulj:5OVOo1X411PnFNVb@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres',
     ssl: process.env.DATABASE_URL ? true : false
 })
 

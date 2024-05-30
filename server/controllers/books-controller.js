@@ -9,7 +9,7 @@ export const addBook = async (req,res) =>{
     const totalspending = req.body.totalspending
     const id = uuidv4()
     try{
-        const data = await pool.query(`INSERT INTO BOOKS(id,email,bookname,totalearning,totalspending) VALUES('${id}','${userEmail}','${bookName}','${totalearning}','${totalspending}')`)
+        const data = await pool.query(`INSERT INTO "BOOKS"(id,email,bookname,totalearning,totalspending) VALUES('${id}','${userEmail}','${bookName}','${totalearning}','${totalspending}')`)
         res.json(data.rows)
     }
     catch(err){
@@ -19,7 +19,7 @@ export const addBook = async (req,res) =>{
 export const getBooks = async (req,res) =>{
     const userEmail = req.email
     try{
-        const data = await pool.query(`SELECT * FROM BOOKS WHERE EMAIL = '${userEmail}'
+        const data = await pool.query(`SELECT * FROM "BOOKS" WHERE EMAIL = '${userEmail}'
         `)
         let booksData = {}
         if(data.rows.length){
@@ -37,7 +37,7 @@ export const getBooks = async (req,res) =>{
 export const deleteBook = async (req,res) =>{
     const id = req.params.id
     try{
-        const data = await pool.query(`DELETE FROM BOOKS WHERE id = '${id}'`)
+        const data = await pool.query(`DELETE FROM "BOOKS" WHERE id = '${id}'`)
         res.json(data.rows)
     }
     catch(err){
@@ -56,7 +56,7 @@ export const getBookDetails = async (req,res) =>{
     const userEmail = req.email
     const bookname = req.body.bookname
     try{
-        const data = await pool.query(`SELECT * FROM EXPENSES WHERE EMAIL = '${userEmail}' and BOOKNAME = '${bookname}'
+        const data = await pool.query(`SELECT * FROM "EXPENSES" WHERE EMAIL = '${userEmail}' and BOOKNAME = '${bookname}'
         `)
         const bookDetailsData = data.rows
         bookDetailsData.forEach((spending)=>{
@@ -94,7 +94,7 @@ export const getBookDetailsEarning = async (req,res) =>{
     const userEmail = req.email
     const bookname = req.body.bookname
     try{
-        const data = await pool.query(`SELECT * FROM EARNINGS WHERE EMAIL = '${userEmail}' and BOOKNAME = '${bookname}'
+        const data = await pool.query(`SELECT * FROM "EARNINGS" WHERE EMAIL = '${userEmail}' and BOOKNAME = '${bookname}'
         `)
         const earningsData = data.rows
         earningsData.forEach(earning =>{
@@ -118,7 +118,7 @@ export const deleteExpenseBook = async (req,res) =>{
     console.log('delete book expense')
     const currentBookname=  req.params.currentBookname
     try{
-        const data = await pool.query(`DELETE FROM EXPENSES WHERE BOOKNAME = '${currentBookname}'`)
+        const data = await pool.query(`DELETE FROM "EXPENSES" WHERE BOOKNAME = '${currentBookname}'`)
         res.json({data:data.rows,status:true, details:'deleted'})
     }
     catch(err){
@@ -129,7 +129,7 @@ export const deleteEarningBook = async (req,res) =>{
     console.log('delete book earning')
     const currentBookname=  req.params.currentBookname
     try{
-        const data = await pool.query(`DELETE FROM EARNINGS WHERE BOOKNAME = '${currentBookname}'`)
+        const data = await pool.query(`DELETE FROM "EARNINGS" WHERE BOOKNAME = '${currentBookname}'`)
         res.json({data:data.rows,status:true, details:'deleted'})
     }
     catch(err){
